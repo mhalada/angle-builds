@@ -23,11 +23,16 @@ jobs:
         target-os: [linux]
 
     steps:
-      - name: Checkout depot tools
-        uses: actions/checkout@v4
-        with:
-            repository: 'chromium/tools/depot_tools'
-            github-server-url: https://chromium.googlesource.com
+      - name: Download Depot Tools
+        shell: python
+        run: |
+          import os
+          
+          for i in range(250):
+              if os.system("git clone --filter=tree:0 https://chromium.googlesource.com/chromium/tools/depot_tools depot_tools") == 0:
+                  raise SystemExit(0)
+          
+          raise Exception("cloning depot tools failed")
 
       - name: Initialize Depot Tools
         working-directory: depot_tools
