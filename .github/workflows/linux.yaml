@@ -24,13 +24,11 @@ jobs:
 
     steps:
       - name: Download Depot Tools
-        run: |
-          git clone https://chromium.googlesource.com/chromium/tools/depot_tools.git
-          echo "cloned"
+        run: git clone https://chromium.googlesource.com/chromium/tools/depot_tools.git
 
       - name: Initialize Depot Tools
         working-directory: depot_tools
-        run: gclient
+        run: ./gclient
       - name: Prepend Depot Tools to PATH
         working-directory: depot_tools
         run: echo "$(pwd)" >> $GITHUB_PATH
