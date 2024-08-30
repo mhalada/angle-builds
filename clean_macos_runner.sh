@@ -64,8 +64,8 @@ rm -f /usr/local/bin/change_hostname.sh
 rm -f /usr/local/bin/azcopy
 
 if which brew &>/dev/null; then
-  eval "$(brew list --formula | xargs -I% echo 'brew uninstall --formula --force --ignore-dependencies "%" &')"
-  eval "$(brew list --cask | xargs -I% echo '{ brew uninstall --cask --force "%"; brew uninstall --cask --zap --force "%"; } &')"
+  # eval "$(brew list --formula | xargs -I% echo 'brew uninstall --formula --force --ignore-dependencies "%" &')"
+  # eval "$(brew list --cask | xargs -I% echo '{ brew uninstall --cask --force "%"; brew uninstall --cask --zap --force "%"; } &')"
   brew uninstall --cask --zap --force adoptopenjdk/openjdk/adoptopenjdk8 &
   brew uninstall --cask --zap --force dotnet &
   brew uninstall --cask --zap --force firefox &
@@ -88,15 +88,15 @@ sudo pkgutil --forget com.apple.pkg.CLTools_Executables
 sudo xcode-select --reset
 
 # Uninstall leftover packages
-mkdir -p /tmp/trash
-for pkg in /var/db/receipts/*.plist; do
-  pkg_id="$(basename "${pkg}" .plist)"
-  volume="$(pkgutil --pkg-info "${pkg_id}" | sed -n -e 's/^volume: //p')"
-  location="$(pkgutil --pkg-info "${pkg_id}" | sed -n -e 's/^location: //p')"
-  pkgutil --only-files --files "${pkg_id}" | xargs -I% sudo mv -f "${volume}${location}/%" /tmp/trash/ || true
-  pkgutil --only-dirs --files "${pkg_id}" | xargs -I% sudo rmdir -p "${volume}${location}/%" || true
-  pkgutil --forget "${pkg_id}"
-done
+# mkdir -p /tmp/trash
+# for pkg in /var/db/receipts/*.plist; do
+#   pkg_id="$(basename "${pkg}" .plist)"
+#   volume="$(pkgutil --pkg-info "${pkg_id}" | sed -n -e 's/^volume: //p')"
+#   location="$(pkgutil --pkg-info "${pkg_id}" | sed -n -e 's/^location: //p')"
+#   pkgutil --only-files --files "${pkg_id}" | xargs -I% sudo mv -f "${volume}${location}/%" /tmp/trash/ || true
+#   pkgutil --only-dirs --files "${pkg_id}" | xargs -I% sudo rmdir -p "${volume}${location}/%" || true
+#   pkgutil --forget "${pkg_id}"
+# done
 
 # Delete broken symlinks
 for exe in /usr/local/bin/*; do
