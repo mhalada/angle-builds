@@ -19,7 +19,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        target-cpu: [arm64]
+        target-cpu: [x64, arm64]
         target-os: [macos]
 
     steps:

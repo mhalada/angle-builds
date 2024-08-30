@@ -19,7 +19,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        target-cpu: [arm64]
+        target-cpu: [x64, arm64]
         target-os: [linux]
 
     steps:
@@ -73,10 +73,15 @@ jobs:
       - name: Build
         working-directory: angle
         run: autoninja -C out/Release
+        # cp -a angle/out/Release/. output/
       - name: Artifact Preparation
         run: |
           mkdir output
-          cp -a angle/out/Release/. output/
+          cp angle/out/Release/libEGL.so output/libEGL.so
+          cp angle/out/Release/libGLESv2.so output/libGLESv2.so
+          cp angle/out/Release/libvk_swiftshader.so output/libvk_swiftshader.so
+          cp angle/out/Release/libvulkan.so.1 output/libvulkan.so.1
+          cp angle/out/Release/vk_swiftshader_icd.json output/vk_swiftshader_icd.json
       - name: Upload Artifacts
         uses: actions/upload-artifact@v4
         with:
