@@ -19,10 +19,20 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        target-cpu: [x64, arm64]
+        target-cpu: [arm64]
         target-os: [macos]
 
     steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Run script file
+        if: ${{ matrix.target-cpu == 'arm64' }}
+        run: |
+          chmod +x ./clean_macos_runner.sh
+          ./clean_macos_runner.sh
+        shell: bash
+
       - name: Checkout angle-builder
         uses: actions/checkout@v4
         with:

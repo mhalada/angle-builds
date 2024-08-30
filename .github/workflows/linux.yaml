@@ -19,7 +19,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        target-cpu: [x64, arm64]
+        target-cpu: [arm64]
         target-os: [linux]
 
     steps:
@@ -57,6 +57,10 @@ jobs:
       - name: Sync ANGLE
         working-directory: angle
         run: gclient sync
+      - name: Install Linux dependencies
+        if: ${{ matrix.target-cpu == 'arm64' }}
+        working-directory: angle
+        run: ./build/install-build-deps.sh
       - name: Configure ANGLE
         env:
           ANGLE_TARGET_CPU: ${{ matrix.target-cpu }}
@@ -70,7 +74,7 @@ jobs:
       - name: Artifact Preparation
         run: |
           mkdir output
-          copy -a angle/out/Release/. output/
+          cp -a angle/out/Release/. output/
       - name: Upload Artifacts
         uses: actions/upload-artifact@v4
         with:
