@@ -60,7 +60,9 @@ jobs:
       - name: Install Linux dependencies
         if: ${{ matrix.target-cpu == 'arm64' }}
         working-directory: angle
-        run: ./build/install-build-deps.sh --arm
+        run:
+          ./build/install-build-deps.sh
+          ./build/linux/sysroot_scripts/install-sysroot.py --arch=arm64
       - name: Configure ANGLE
         env:
           ANGLE_TARGET_CPU: ${{ matrix.target-cpu }}
