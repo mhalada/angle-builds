@@ -79,25 +79,6 @@ if which brew &>/dev/null; then
   /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/uninstall.sh)" -- --force
 fi
 
-# Uninstall Xcode and Command-Line Tools
-mkdir -p /tmp/trash
-for trash in /Applications/Xcode*.app /Library/Developer/CommandLineTools; do
-  sudo mv "$trash" /tmp/trash/
-done
-sudo pkgutil --forget com.apple.pkg.CLTools_Executables
-sudo xcode-select --reset
-
-# Uninstall leftover packages
-# mkdir -p /tmp/trash
-# for pkg in /var/db/receipts/*.plist; do
-#   pkg_id="$(basename "${pkg}" .plist)"
-#   volume="$(pkgutil --pkg-info "${pkg_id}" | sed -n -e 's/^volume: //p')"
-#   location="$(pkgutil --pkg-info "${pkg_id}" | sed -n -e 's/^location: //p')"
-#   pkgutil --only-files --files "${pkg_id}" | xargs -I% sudo mv -f "${volume}${location}/%" /tmp/trash/ || true
-#   pkgutil --only-dirs --files "${pkg_id}" | xargs -I% sudo rmdir -p "${volume}${location}/%" || true
-#   pkgutil --forget "${pkg_id}"
-# done
-
 # Delete broken symlinks
 for exe in /usr/local/bin/*; do
   if [[ -L "$exe" ]] && ! [[ -e "$exe" ]]; then
