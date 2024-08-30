@@ -1,0 +1,46 @@
+name: MacOS Build
+
+on:
+  workflow_dispatch:
+    inputs:
+      branch:
+        description: Chromium Branch Number to Build
+        type: string
+        required: true
+        default: '6367'
+
+env:
+  ANGLE_BUILDER_OUTPUT_FOLDER: ./angle-builder-output
+
+jobs:
+  build:
+    runs-on: macos-14
+
+    strategy:
+      fail-fast: false
+      matrix:
+        target-cpu: [x64, arm64]
+        target-os: [macos]
+
+    steps:
+      - name: Checkout angle-builder
+        uses: actions/checkout@v4
+        with:
+            repository: 'https://github.com/kivy/angle-builder'
+            ref: 'chromium-6367_rev1'
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+
+      - name: Install angle-builder
+        run: pip install .
+
+      - name: Build artifacts for ${{ matrix.target-os }}-${{ matrix.target-cpu }}
+        run: angle-builder ${{ matrix.target-os }}-${{ matrix.target-cpu }} --branch chromium/${{ inputs.branch }} --artifact-output-folder $ANGLE_BUILDER_OUTPUT_FOLDER
+
+      - name: Store artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: angle-${{ matrix.target-cpu }}-${{ matrix.target-os }}
+          path: ${{ env.ANGLE_BUILDER_OUTPUT_FOLDER }}
+          retention-days: 1
