@@ -23,12 +23,24 @@ jobs:
         target-os: [linux]
 
     steps:
+      - name: Free Disk Space (Ubuntu)
+        uses: jlumbroso/free-disk-space@main
+        with:
+          # this might remove tools that are actually needed,
+          # if set to "true" but frees about 6 GB
+          tool-cache: false
+          
+          # all of these default to true, but feel free to set to
+          # "false" if necessary for your workflow
+          android: true
+          dotnet: true
+          haskell: true
+          large-packages: true
+          docker-images: true
+          swap-storage: true
+
       - name: Download Depot Tools
         run: git clone https://chromium.googlesource.com/chromium/tools/depot_tools.git
-
-    #   - name: Initialize Depot Tools
-    #     working-directory: depot_tools
-    #     run: ./gclient
       - name: Prepend Depot Tools to PATH
         working-directory: depot_tools
         run: echo "$(pwd)" >> $GITHUB_PATH
