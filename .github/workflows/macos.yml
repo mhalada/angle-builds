@@ -26,7 +26,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Run script file
+      - name: Free Disk Space
         if: ${{ matrix.target-cpu == 'arm64' }}
         run: |
           chmod +x ./clean_macos_runner.sh

@@ -23,7 +23,7 @@ jobs:
         target-os: [linux]
 
     steps:
-      - name: Free Disk Space (Ubuntu)
+      - name: Free Disk Space
         uses: jlumbroso/free-disk-space@main
         with:
           # this might remove tools that are actually needed,
@@ -60,7 +60,7 @@ jobs:
       - name: Install Linux dependencies
         if: ${{ matrix.target-cpu == 'arm64' }}
         working-directory: angle
-        run:
+        run: |
           ./build/install-build-deps.sh
           ./build/linux/sysroot_scripts/install-sysroot.py --arch=arm64
       - name: Configure ANGLE
