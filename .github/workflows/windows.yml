@@ -1,0 +1,90 @@
+name: Windows Build
+
+on:
+  workflow_dispatch:
+    inputs:
+      branch:
+        description: Chromium Branch Number to Build
+        type: string
+        required: true
+
+jobs:
+  build:
+    name: Compile
+    runs-on: windows-2022
+    strategy:
+      fail-fast: false
+      matrix:
+        target-cpu: [x64, arm64]
+        target-os: [win]
+    env:
+      DEPOT_TOOLS_WIN_TOOLCHAIN: 0
+    defaults:
+      run:
+        shell: cmd
+    steps:
+    - name: Download Windows SDK Setup 10.0.20348
+      run: curl -Lfo winsdksetup.exe https://go.microsoft.com/fwlink/?linkid=2164145
+    - name: Install Debugging Tools for Windows
+      id: windbg
+      run: |
+        setlocal enabledelayedexpansion
+        start /WAIT %CD%\winsdksetup.exe /features OptionId.WindowsDesktopDebuggers /q /log %CD%\log.txt
+        echo ERRORLEVEL=!ERRORLEVEL! >> %GITHUB_OUTPUT%
+    - name: Print Log
+      if: always()
+      run: |
+        type log.txt
+        exit /b ${{ steps.windbg.outputs.ERRORLEVEL }}
+    - name: Download Depot Tools
+      shell: python
+      run: |
+        import os
+        
+        for i in range(250):
+            if os.system("git clone --filter=tree:0 https://chromium.googlesource.com/chromium/tools/depot_tools depot_tools") == 0:
+                raise SystemExit(0)
+        
+        raise Exception("cloning depot tools failed")
+    - name: Initialize Depot Tools
+      working-directory: depot_tools
+      run: |
+        gclient
+        exit /b 0
+    - name: Prepend Depot Tools to PATH
+      working-directory: depot_tools
+      run: |
+        set /p="%CD%" < nul >> %GITHUB_PATH%
+        exit /b 0
+    - name: Create ANGLE Directory
+      run: mkdir angle
+    - name: Fetch ANGLE
+      working-directory: angle
+      run: fetch angle
+    - name: Checkout ANGLE Branch
+      if: ${{ github.event_name == 'workflow_dispatch' && inputs.branch != 'main' }}
+      working-directory: angle
+      run: git checkout origin/chromium/${{ inputs.branch }}
+    - name: Sync ANGLE
+      working-directory: angle
+      run: gclient sync
+    - name: Configure ANGLE
+      env:
+        ANGLE_TARGET_CPU: ${{ matrix.target-cpu }}
+        ANGLE_TARGET_OS: ${{ matrix.target-os }}
+      working-directory: angle
+      run: gn gen out/Release --args="target_cpu=\"%ANGLE_TARGET_CPU%\" target_os=\"%ANGLE_TARGET_OS%\" is_debug=false is_component_build=false is_clang=false"
+    - name: Build
+      working-directory: angle
+      run: autoninja -C out/Release libEGL libGLESv2
+    - name: Artifact Preparation
+      run: |
+        mkdir output
+        copy angle\out\Release\libEGL.dll output\libEGL.dll
+        copy angle\out\Release\libGLESv2.dll output\libGLESv2.dll
+    - name: Upload Artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: angle-${{ matrix.target-cpu }}-${{ matrix.target-os }}
+        path: output/
+        retention-days: 1
