@@ -75,6 +75,7 @@ jobs:
       - name: Artifact Preparation
         working-directory: gl-native-node
         run: |
+          mkdir output
           cp dist/mbgl-server.node output/mbgl-linux-x64.node
       - name: Upload Artifacts
         uses: actions/upload-artifact@v4
