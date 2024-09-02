@@ -3,9 +3,6 @@ name: gl-native-node Linux Build
 on:
   workflow_dispatch:
 
-env:
-  ANGLE_BUILDER_OUTPUT_FOLDER: ./angle-builder-output
-
 jobs:
   build:
     runs-on: ubuntu-20.04
@@ -48,10 +45,20 @@ jobs:
           tar -xvzf libwebp-1.3.0-linux-x86-64.tar.gz
           cp libwebp-1.3.0-linux-x86-64/lib/libwebp.a dist/.
 
+      - name: Download ANGLE dependency
+        working-directory: gl-native-node
+        run: |
+          wget https://github.com/mhalada/angle-builds/releases/download/v0.0.1/angle-x64-linux.zip
+          unzip angle-x64-linux.zip -d angle-x64-linux
+          cp angle-x64-linux/libEGL.so dist/.
+          cp angle-x64-linux/libGLESv2.so dist/.
+          cp angle-x64-linux/libvk_swiftshader.so dist/.
+          cp angle-x64-linux/libvulkan.so.1 dist/.
+
       - name: Build gl-native-node
         working-directory: gl-native-node
         run: |
-          ls -als
+          chmod +x ./build.sh
           ./build.sh server
 
       - name: Artifact Preparation
