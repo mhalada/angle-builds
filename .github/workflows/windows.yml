@@ -84,9 +84,7 @@ jobs:
         ls -als angle\out\Release\
         copy angle\out\Release\libEGL.dll output\libEGL.dll
         copy angle\out\Release\libGLESv2.dll output\libGLESv2.dll
-        copy angle\out\Release\libvk_swiftshader.dll output\libvk_swiftshader.dll
-        copy angle\out\Release\libvulkan.1.dll output\libvulkan.1.dll
-        copy angle\out\Release\vk_swiftshader_icd.json output\vk_swiftshader_icd.json
+        copy angle\out\Release\vulkan-1.dll output\vulkan-1.dll
     - name: Upload Artifacts
       uses: actions/upload-artifact@v4
       with:
