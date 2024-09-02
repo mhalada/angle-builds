@@ -6,3 +6,4 @@
 - https://github.com/MikuAuahDark/angle-winbuild
 - https://github.com/kivy/angle-builder
 - https://chromiumdash.appspot.com/branches
+- https://developers.google.com/speed/webp/docs/compiling#building
