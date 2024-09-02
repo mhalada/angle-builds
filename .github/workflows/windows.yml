@@ -77,12 +77,16 @@ jobs:
       run: gn gen out/Release --args="target_cpu=\"%ANGLE_TARGET_CPU%\" target_os=\"%ANGLE_TARGET_OS%\" is_debug=false is_component_build=false is_clang=false"
     - name: Build
       working-directory: angle
-      run: autoninja -C out/Release libEGL libGLESv2
+      run: autoninja -C out/Release
     - name: Artifact Preparation
       run: |
         mkdir output
+        ls -als angle\out\Release\
         copy angle\out\Release\libEGL.dll output\libEGL.dll
         copy angle\out\Release\libGLESv2.dll output\libGLESv2.dll
+        copy angle\out\Release\libvk_swiftshader.dll output\libvk_swiftshader.dll
+        copy angle\out\Release\libvulkan.1.dll output\libvulkan.1.dll
+        copy angle\out\Release\vk_swiftshader_icd.json output\vk_swiftshader_icd.json
     - name: Upload Artifacts
       uses: actions/upload-artifact@v4
       with:
