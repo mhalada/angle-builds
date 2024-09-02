@@ -26,14 +26,14 @@ jobs:
         with:
             repository: 'ImageOptim/libimagequant'
             ref: '2.17.0'
-            path: gl-native-node/vendor
+            path: gl-native-node/vendor/libimagequant
 
       - name: Checkout mapbox-gl-native dependency
         uses: actions/checkout@v4
         with:
             repository: 'maptiler/mapbox-gl-native-private'
             ref: 'maptiler'
-            path: gl-native-node/vendor
+            path: gl-native-node/vendor/mapbox-gl-native
             token: ${{ secrets.GH_PAT }}
             submodules: 'recursive'
 
