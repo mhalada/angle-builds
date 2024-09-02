@@ -58,6 +58,7 @@ jobs:
       - name: Build gl-native-node
         working-directory: gl-native-node
         run: |
+          chmod +x ./build.sh
           chmod +x ./build-in-docker.sh
           ./build-in-docker.sh server
 
