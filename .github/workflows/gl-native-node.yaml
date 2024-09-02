@@ -22,6 +22,7 @@ jobs:
         with:
             repository: 'mhalada/gl-native-node'
             token: ${{ secrets.GH_PAT }}
+            path: gl-native-node
 
       - name: Checkout libimagequant dependency
         uses: actions/checkout@v4
@@ -50,6 +51,7 @@ jobs:
       - name: Build gl-native-node
         working-directory: gl-native-node
         run: |
+          ls -als
           ./build.sh server
 
       - name: Artifact Preparation
