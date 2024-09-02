@@ -10,7 +10,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        target-cpu: [x64]
+        target-cpu: [x64, arm64]
         target-os: [linux]
 
     steps:
@@ -57,15 +57,28 @@ jobs:
         working-directory: gl-native-node
         run: |
           mkdir dist
-          wget https://github.com/mhalada/angle-builds/releases/download/v0.0.1/angle-x64-linux.zip
-          unzip angle-x64-linux.zip -d angle-x64-linux
-          cp angle-x64-linux/libEGL.so dist/.
-          cp angle-x64-linux/libGLESv2.so dist/.
-          cp angle-x64-linux/libvk_swiftshader.so dist/.
-          cp angle-x64-linux/libvulkan.so.1 dist/.
+          wget https://github.com/mhalada/angle-builds/releases/download/v0.0.1/angle-${{ matrix.target-cpu }}-linux.zip -O angle.zip
+          unzip angle.zip -d angle
+          cp angle/libEGL.so dist/.
+          cp angle/libGLESv2.so dist/.
+          cp angle/libvk_swiftshader.so dist/.
+          cp angle/libvulkan.so.1 dist/.
+          cp angle/vk_swiftshader_icd.json dist/.
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+        with:
+          platforms: linux/amd64,linux/arm64
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+        with:
+          install: true
+          platforms: linux/amd64,linux/arm64
 
       - name: Build gl-native-node
         working-directory: gl-native-node
+        env:
+          DOCKER_PLATFORM: ${{ matrix.target-cpu == 'arm64' && 'arm64' || 'amd64' }}
         run: |
           chmod +x ./build.sh
           chmod +x ./build-webp.sh
@@ -77,7 +90,7 @@ jobs:
         working-directory: gl-native-node
         run: |
           mkdir ../output
-          cp dist/mbgl-server.node ../output/mbgl-linux-x64.node
+          cp dist/mbgl-server.node ../output/mbgl-linux-${{ matrix.target-cpu }}.node
       - name: Upload Artifacts
         uses: actions/upload-artifact@v4
         with:
