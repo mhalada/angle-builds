@@ -70,6 +70,7 @@ jobs:
           chmod +x ./build.sh
           chmod +x ./build-webp.sh
           chmod +x ./build-in-docker.sh
+          chmod +x ./test.sh
           ./build-in-docker.sh server
 
       - name: Artifact Preparation
