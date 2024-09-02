@@ -56,6 +56,7 @@ jobs:
       - name: Download ANGLE dependency
         working-directory: gl-native-node
         run: |
+          mkdir dist
           wget https://github.com/mhalada/angle-builds/releases/download/v0.0.1/angle-x64-linux.zip
           unzip angle-x64-linux.zip -d angle-x64-linux
           cp angle-x64-linux/libEGL.so dist/.
