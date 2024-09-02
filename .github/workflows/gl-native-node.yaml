@@ -1,0 +1,64 @@
+name: gl-native-node Linux Build
+
+on:
+  workflow_dispatch:
+
+env:
+  ANGLE_BUILDER_OUTPUT_FOLDER: ./angle-builder-output
+
+jobs:
+  build:
+    runs-on: ubuntu-20.04
+
+    strategy:
+      fail-fast: false
+      matrix:
+        target-cpu: [x64]
+        target-os: [linux]
+
+    steps:
+      - name: Checkout gl-native-node
+        uses: actions/checkout@v4
+        with:
+            repository: 'mhalada/gl-native-node'
+            token: ${{ secrets.GH_PAT }}
+
+      - name: Checkout libimagequant dependency
+        uses: actions/checkout@v4
+        with:
+            repository: 'ImageOptim/libimagequant'
+            ref: '2.17.0'
+            path: gl-native-node/vendor
+
+      - name: Checkout mapbox-gl-native dependency
+        uses: actions/checkout@v4
+        with:
+            repository: 'maptiler/mapbox-gl-native-private'
+            ref: 'maptiler'
+            path: gl-native-node/vendor
+            token: ${{ secrets.GH_PAT }}
+            submodules: 'recursive'
+
+      - name: Download libwebp dependency
+        working-directory: gl-native-node
+        run: |
+          mkdir dist
+          wget https://storage.googleapis.com/downloads.webmproject.org/releases/webp/libwebp-1.3.0-linux-x86-64.tar.gz
+          tar -xvzf libwebp-1.3.0-linux-x86-64.tar.gz
+          cp libwebp-1.3.0-linux-x86-64/lib/libwebp.a dist/.
+
+      - name: Build gl-native-node
+        working-directory: gl-native-node
+        run: |
+          ./build.sh server
+
+      - name: Artifact Preparation
+        working-directory: gl-native-node
+        run: |
+          cp dist/mbgl-linux-x64.node output/mbgl-linux-x64.node
+      - name: Upload Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: gl-native-node-${{ matrix.target-cpu }}-${{ matrix.target-os }}
+          path: output/
+          retention-days: 1
