@@ -19,6 +19,11 @@ jobs:
         with:
           node-version: ${{ matrix.target-cpu == 'arm64' && 16 || 14 }}
 
+      - name: Setup cmake
+        uses: jwlawson/actions-setup-cmake@v2
+        with:
+          cmake-version: '3.19.x'
+
       - name: Checkout gl-native-node
         uses: actions/checkout@v4
         with:
