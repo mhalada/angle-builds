@@ -56,6 +56,7 @@ jobs:
       - name: Build gl-native-node
         working-directory: gl-native-node
         run: |
+          npm install -g cmake-js node-addon-api
           chmod +x ./build.sh
           chmod +x ./build-webp.sh
           ./build-webp.sh
