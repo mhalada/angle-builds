@@ -17,7 +17,7 @@ jobs:
       - name: Setup Node 14
         uses: actions/setup-node@v4
         with:
-          node-version: 14
+          node-version: ${{ matrix.target-cpu == 'arm64' && 16 || 14 }}
 
       - name: Checkout gl-native-node
         uses: actions/checkout@v4
@@ -61,7 +61,8 @@ jobs:
       - name: Build gl-native-node
         working-directory: gl-native-node
         run: |
-          npm install -g cmake-js node-addon-api
+          npm install -g --no-package-lock cmake-js node-addon-api
+          echo "NODE_ENV=/Users/runner/hostedtoolcache/node/14.21.3/x64/lib/node_modules" >> $GITHUB_ENV
           chmod +x ./build.sh
           chmod +x ./build-webp.sh
           ./build-webp.sh
