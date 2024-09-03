@@ -69,8 +69,8 @@ jobs:
           npm install -g --no-package-lock cmake-js node-addon-api
           npm list -g
           node --version
-          node -p "require('node-addon-api').include"
-          echo "NODE_PATH=/Users/runner/hostedtoolcache/node/14.21.3/x64/lib/node_modules" >> $GITHUB_ENV
+          echo "NODE_PATH=/Users/runner/hostedtoolcache/node/18.20.4/x64/lib/node_modules" >> $GITHUB_ENV
+          NODE_PATH=/Users/runner/hostedtoolcache/node/18.20.4/x64/lib/node_modules node -p "require('node-addon-api').include"
           chmod +x ./build.sh
           chmod +x ./build-webp.sh
           ./build-webp.sh
