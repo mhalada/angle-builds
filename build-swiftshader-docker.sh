@@ -7,4 +7,4 @@ chmod +x /tmp/cmake.sh
 /tmp/cmake.sh --skip-license --prefix=/usr
 rm /tmp/cmake.sh
 
-/data/build-swiftshader.sh
+./build-swiftshader.sh

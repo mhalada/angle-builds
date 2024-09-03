@@ -47,7 +47,7 @@ jobs:
         run: |
           chmod +x ./build-swiftshader.sh
           chmod +x ./build-swiftshader-docker.sh
-          docker run --platform linux/arm64 --rm -v $(pwd):/data ubuntu:20.04 /data/build-swiftshader-docker.sh
+          docker run --platform linux/arm64 --rm -v $(pwd):/data -w /data ubuntu:20.04 ./build-swiftshader-docker.sh
 
       - name: Artifact Preparation
         working-directory: swiftshader
