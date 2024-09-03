@@ -10,7 +10,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        target-cpu: [x64]
+        target-cpu: [x64, arm64]
         target-os: [linux]
 
     steps:
@@ -23,15 +23,40 @@ jobs:
             repository: 'google/swiftshader'
             path: swiftshader
 
+      - name: Set up QEMU
+        if: ${{ matrix.target-cpu == 'arm64' }}
+        uses: docker/setup-qemu-action@v3
+        with:
+          platforms: linux/arm64
+      - name: Set up Docker Buildx
+        if: ${{ matrix.target-cpu == 'arm64' }}
+        uses: docker/setup-buildx-action@v3
+        with:
+          install: true
+          platforms: linux/arm64
+
       - name: Build swiftshader
+        if: ${{ matrix.target-cpu == 'x64' }}
         run: |
           chmod +x ./build-swiftshader.sh
           ./build-swiftshader.sh
 
+      - name: Build swiftshader in Docker
+        if: ${{ matrix.target-cpu == 'arm64' }}
+        run: |
+          chmod +x ./build-swiftshader.sh
+          chmod +x ./build-swiftshader-docker.sh
+          docker run --platform linux/arm64 --rm -v $(pwd):/data ubuntu:20.04 ./build-swiftshader-docker.sh
+
       - name: Artifact Preparation
         working-directory: swiftshader
         run: |
-          tree .
+          mkdir ../output
+          cp build/Linux/libEGL.so ../output/libEGL.so
+          cp build/Linux/libGLESv2.so ../output/libGLESv2.so
+          cp build/Linux/libvk_swiftshader.so ../output/libvk_swiftshader.so
+          cp build/Linux/libvulkan.so.1 ../output/libvulkan.so.1
+          cp build/Linux/vk_swiftshader_icd.json ../output/vk_swiftshader_icd.json
       - name: Upload Artifacts
         uses: actions/upload-artifact@v4
         with:
