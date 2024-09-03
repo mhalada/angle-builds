@@ -54,8 +54,8 @@ jobs:
         run: |
           tree .
           mkdir ../output
-          cp build/Linux/libEGL.so ../output/libEGL.so
-          cp build/Linux/libGLESv2.so ../output/libGLESv2.so
+          cp build/Linux/libEGL_deprecated.so ../output/libEGL.so
+          cp build/Linux/libGLESv2_deprecated.so ../output/libGLESv2.so
           cp build/Linux/libvk_swiftshader.so ../output/libvk_swiftshader.so
           cp build/Linux/libvulkan.so.1 ../output/libvulkan.so.1
           cp build/Linux/vk_swiftshader_icd.json ../output/vk_swiftshader_icd.json
