@@ -27,18 +27,18 @@ jobs:
       - name: Build swiftshader
         run: |
           cd swiftshader\build
-          cmake .. -Thost=x64^
-           -G "Visual Studio 15 2017 Win64"^
-           -DCMAKE_BUILD_TYPE=Release^
-           -DSWIFTSHADER_BUILD_EGL=YES^
-           -DSWIFTSHADER_BUILD_GLESv2=YES^
-           -DSWIFTSHADER_BUILD_GLES_CM=NO^
-           -DSWIFTSHADER_BUILD_PVR=NO^
-           -DSWIFTSHADER_USE_GROUP_SOURCES=NO^
-           -DSWIFTSHADER_BUILD_BENCHMARKS=NO^
-           -DSWIFTSHADER_ENABLE_ASTC=NO^
-           -DSWIFTSHADER_BUILD_TESTS=NO^
-           -DSWIFTSHADER_BUILD_VULKAN=NO^
+          cmake .. -Thost=x64 ^
+           -G "Visual Studio 15 2017 Win64" ^
+           -DCMAKE_BUILD_TYPE=Release ^
+           -DSWIFTSHADER_BUILD_EGL=YES ^
+           -DSWIFTSHADER_BUILD_GLESv2=YES ^
+           -DSWIFTSHADER_BUILD_GLES_CM=NO ^
+           -DSWIFTSHADER_BUILD_PVR=NO ^
+           -DSWIFTSHADER_USE_GROUP_SOURCES=NO ^
+           -DSWIFTSHADER_BUILD_BENCHMARKS=NO ^
+           -DSWIFTSHADER_ENABLE_ASTC=NO ^
+           -DSWIFTSHADER_BUILD_TESTS=NO ^
+           -DSWIFTSHADER_BUILD_VULKAN=NO ^
            -DWARNINGS_AS_ERRORS=NO
           cmake --build . --config Release --parallel
 
