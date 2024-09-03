@@ -14,6 +14,11 @@ jobs:
         target-os: [macos]
 
     steps:
+      - name: Setup Node 14
+        uses: actions/setup-node@v4
+        with:
+          node-version: 14
+
       - name: Checkout gl-native-node
         uses: actions/checkout@v4
         with:
