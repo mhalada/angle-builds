@@ -70,8 +70,9 @@ jobs:
       - name: Build gl-native-node
         working-directory: gl-native-node
         run: |
+          brew install glfw
           npm install -g --no-package-lock cmake-js node-addon-api
-          export NODE_PATH=/Users/runner/hostedtoolcache/node/$NODE_VERSION/x64/lib/node_modules
+          export NODE_PATH=/Users/runner/hostedtoolcache/node/$NODE_VERSION/${{ matrix.target-cpu }}/lib/node_modules
           chmod +x ./build.sh
           chmod +x ./build-webp.sh
           ./build-webp.sh
