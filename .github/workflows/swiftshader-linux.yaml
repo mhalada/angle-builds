@@ -1,0 +1,40 @@
+name: swiftshader Linux Build
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-20.04
+
+    strategy:
+      fail-fast: false
+      matrix:
+        target-cpu: [x64]
+        target-os: [linux]
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Checkout swiftshader
+        uses: actions/checkout@v4
+        with:
+            repository: 'google/swiftshader'
+            path: swiftshader
+
+      - name: Build swiftshader
+        run: |
+          chmod +x ./build-swiftshader.sh
+          ./build-swiftshader.sh
+
+      - name: Artifact Preparation
+        working-directory: swiftshader
+        run: |
+          tree .
+      - name: Upload Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: swiftshader-${{ matrix.target-cpu }}-${{ matrix.target-os }}
+          path: output/
+          retention-days: 1
