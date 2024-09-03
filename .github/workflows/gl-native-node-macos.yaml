@@ -68,6 +68,7 @@ jobs:
         run: |
           npm install -g --no-package-lock cmake-js node-addon-api
           npm list -g
+          node --version
           node -p "require('node-addon-api').include"
           echo "NODE_PATH=/Users/runner/hostedtoolcache/node/14.21.3/x64/lib/node_modules" >> $GITHUB_ENV
           chmod +x ./build.sh
