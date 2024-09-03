@@ -3,6 +3,10 @@ name: gl-native-node MacOS Build
 on:
   workflow_dispatch:
 
+env:
+  NODE_AMD64_VERSION: 14.21.3
+  NODE_ARM64_VERSION: 16.20.1
+
 jobs:
   build:
     runs-on: ${{ matrix.target-cpu == 'arm64' && 'macos-14' || 'macos-13' }}
@@ -17,7 +21,7 @@ jobs:
       - name: Setup Node 14
         uses: actions/setup-node@v4
         with:
-          node-version: ${{ matrix.target-cpu == 'arm64' && 16 || 18 }}
+          node-version: ${{ matrix.target-cpu == 'arm64' && env.NODE_ARM64_VERSION || env.NODE_AMD64_VERSION }}
 
       - name: Setup cmake
         uses: jwlawson/actions-setup-cmake@v2
@@ -67,14 +71,13 @@ jobs:
         working-directory: gl-native-node
         run: |
           npm install -g --no-package-lock cmake-js node-addon-api
-          npm list -g
-          node --version
-          echo "NODE_PATH=/Users/runner/hostedtoolcache/node/18.20.4/x64/lib/node_modules" >> $GITHUB_ENV
-          NODE_PATH=/Users/runner/hostedtoolcache/node/18.20.4/x64/lib/node_modules node -p "require('node-addon-api').include"
+          export NODE_PATH=/Users/runner/hostedtoolcache/node/$NODE_VERSION/x64/lib/node_modules
           chmod +x ./build.sh
           chmod +x ./build-webp.sh
           ./build-webp.sh
           ./build.sh server
+        env:
+          NODE_VERSION: ${{ matrix.target-cpu == 'arm64' && env.NODE_ARM64_VERSION || env.NODE_AMD64_VERSION }}
 
       - name: Artifact Preparation
         working-directory: gl-native-node
