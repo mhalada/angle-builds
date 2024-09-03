@@ -22,6 +22,7 @@ jobs:
         with:
             repository: 'google/swiftshader'
             path: swiftshader
+            ref: edeff1f2e7dbc2f6e04b1022f84959b584e4e740
 
       - name: Set up QEMU
         if: ${{ matrix.target-cpu == 'arm64' }}

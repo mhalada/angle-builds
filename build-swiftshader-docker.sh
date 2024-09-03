@@ -1,6 +1,6 @@
 #!/bin/sh
 
-apt-get -y install build-essential
+apt-get update && apt-get -y install build-essential curl
 
 curl -L -o /tmp/cmake.sh https://github.com/Kitware/CMake/releases/download/v3.30.2/cmake-3.30.2-linux-aarch64.sh
 chmod +x /tmp/cmake.sh
