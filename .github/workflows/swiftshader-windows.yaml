@@ -26,6 +26,7 @@ jobs:
 
       - name: Build swiftshader
         run: |
+          cd swiftshader\build
           cmake .. -Thost=x64 ^
             -G "Visual Studio 15 2017 Win64" ^
             -DCMAKE_BUILD_TYPE=Release ^
