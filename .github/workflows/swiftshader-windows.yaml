@@ -1,0 +1,59 @@
+name: swiftshader Windows Build
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: windows-2022
+
+    strategy:
+      fail-fast: false
+      matrix:
+        target-cpu: [x64]
+        target-os: [win]
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Checkout swiftshader
+        uses: actions/checkout@v4
+        with:
+            repository: 'google/swiftshader'
+            path: swiftshader
+            ref: edeff1f2e7dbc2f6e04b1022f84959b584e4e740
+
+      - name: Build swiftshader
+        run: |
+          cmake .. -Thost=x64^
+            -G "Visual Studio 15 2017 Win64"^
+            -DCMAKE_BUILD_TYPE=Release^
+            -DSWIFTSHADER_BUILD_EGL=YES^
+            -DSWIFTSHADER_BUILD_GLESv2=YES^
+            -DSWIFTSHADER_BUILD_GLES_CM=NO^
+            -DSWIFTSHADER_BUILD_PVR=NO^
+            -DSWIFTSHADER_USE_GROUP_SOURCES=NO^
+            -DSWIFTSHADER_BUILD_BENCHMARKS=NO^
+            -DSWIFTSHADER_ENABLE_ASTC=NO^
+            -DSWIFTSHADER_BUILD_TESTS=NO^
+            -DSWIFTSHADER_BUILD_VULKAN=NO^
+            -DWARNINGS_AS_ERRORS=NO
+          cmake --build . --config Release --parallel
+
+      - name: Artifact Preparation
+        working-directory: swiftshader
+        run: |
+          dir /s /b
+          mkdir ../output
+          copy build/Windows/libEGL_deprecated.dll ../output/libEGL.dll
+          copy build/Windows/libGLESv2_deprecated.dll ../output/libGLESv2.dll
+          copy build/Windows/libvk_swiftshader.dll ../output/libvk_swiftshader.dll
+          copy build/Windows/vulkan.1.dll ../output/vulkan.1.dll
+          copy build/Windows/vk_swiftshader_icd.json ../output/vk_swiftshader_icd.json
+      - name: Upload Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: swiftshader-${{ matrix.target-cpu }}-${{ matrix.target-os }}
+          path: output/
+          retention-days: 1
