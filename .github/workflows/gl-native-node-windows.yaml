@@ -14,6 +14,9 @@ jobs:
         target-os: [win]
 
     steps:
+      - name: Support longpaths
+        run: git config --system core.longpaths true
+
       - name: Checkout gl-native-node
         uses: actions/checkout@v4
         with:
