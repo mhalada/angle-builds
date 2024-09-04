@@ -26,13 +26,14 @@ jobs:
 
       - name: Build swiftshader
         run: |
+          ls -R .
           chmod +x ./build-swiftshader.sh
           ./build-swiftshader.sh
 
       - name: Artifact Preparation
         working-directory: swiftshader
         run: |
-          tree .
+          ls -R .
           mkdir ../output
           cp build/Linux/libEGL_deprecated.so ../output/libEGL.so
           cp build/Linux/libGLESv2_deprecated.so ../output/libGLESv2.so
