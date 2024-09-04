@@ -33,7 +33,7 @@ jobs:
       - name: Artifact Preparation
         working-directory: swiftshader
         run: |
-          dir . /s /b
+          dir build/Windows
           mkdir ../output
           copy build/Windows/libEGL_deprecated.dll ../output/libEGL.dll
           copy build/Windows/libGLESv2_deprecated.dll ../output/libGLESv2.dll
