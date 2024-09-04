@@ -17,6 +17,11 @@ jobs:
       - name: Support longpaths
         run: git config --system core.longpaths true
 
+      - name: Setup Node 14
+        uses: actions/setup-node@v4
+        with:
+          node-version: 14
+
       - name: Checkout gl-native-node
         uses: actions/checkout@v4
         with:
@@ -73,6 +78,7 @@ jobs:
         working-directory: gl-native-node
         run: |
           echo $env:LIBS_DIR
+          npm install -g cmake-js node-addon-api
           ./build.bat
 
       - name: Artifact Preparation
