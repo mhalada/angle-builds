@@ -42,7 +42,7 @@ jobs:
 
       - name: Download libwebp dependency
         run: |
-          mkdir dependencies\apps dependencies\bin dependencies\include dependencies\lib
+          mkdir dependencies\apps, dependencies\bin, dependencies\include, dependencies\lib
           curl -o libwebp.zip https://storage.googleapis.com/downloads.webmproject.org/releases/webp/libwebp-1.3.0-windows-x64.zip
           mkdir libwebp
           tar -xf libwebp.zip -C libwebp
