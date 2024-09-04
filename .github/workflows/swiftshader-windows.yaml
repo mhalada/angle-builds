@@ -37,8 +37,8 @@ jobs:
           mkdir ../output
           copy build/Windows/libEGL_deprecated.dll ../output/libEGL.dll
           copy build/Windows/libGLESv2_deprecated.dll ../output/libGLESv2.dll
-          copy build/Windows/libvk_swiftshader.dll ../output/libvk_swiftshader.dll
-          copy build/Windows/vulkan.1.dll ../output/vulkan.1.dll
+          copy build/Windows/vk_swiftshader.dll ../output/vk_swiftshader.dll
+          copy build/Windows/vulkan-1.dll ../output/vulkan-1.dll
           copy build/Windows/vk_swiftshader_icd.json ../output/vk_swiftshader_icd.json
       - name: Upload Artifacts
         uses: actions/upload-artifact@v4
