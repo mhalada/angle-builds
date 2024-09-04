@@ -87,6 +87,8 @@ jobs:
         working-directory: gl-native-node
         run: |
           echo $env:LIBS_DIR
+          echo $env:GITHUB_PATH
+          echo $env:PATH
           npm install -g cmake-js node-addon-api
           ./build.bat
 
