@@ -43,6 +43,7 @@ jobs:
       - name: Download libwebp dependency
         run: |
           mkdir dependencies\apps, dependencies\bin, dependencies\include, dependencies\lib
+          echo "LIBS_DIR=$(Get-Item .)\dependencies" >> $env:GITHUB_ENV
           curl -o libwebp.zip https://storage.googleapis.com/downloads.webmproject.org/releases/webp/libwebp-1.3.0-windows-x64.zip
           mkdir libwebp
           tar -xf libwebp.zip -C libwebp
@@ -63,16 +64,15 @@ jobs:
       - name: Download ANGLE dependency
         run: |
           curl -L -o angle.zip https://github.com/mhalada/angle-builds/releases/download/v0.0.1/angle-${{ matrix.target-cpu }}-win.zip
-          ls -as .\angle.zip
           mkdir angle
           tar -xf angle.zip -C angle
-          ls angle
           copy angle\libEGL.dll dependencies\lib\libEGL.dll
           copy angle\libGLESv2.dll dependencies\lib\libEGL.dll
 
       - name: Build gl-native-node
         working-directory: gl-native-node
         run: |
+          echo $env:LIBS_DIR
           ./build.bat
 
       - name: Artifact Preparation
