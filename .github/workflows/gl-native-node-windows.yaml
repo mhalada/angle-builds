@@ -14,7 +14,7 @@ jobs:
         target-os: [win]
 
     steps:
-      - name: Support longpaths
+      - name: Support long paths
         run: git config --system core.longpaths true
 
       - name: Setup Node 14
@@ -73,6 +73,15 @@ jobs:
           tar -xf angle.zip -C angle
           copy angle\libEGL.dll dependencies\lib\libEGL.dll
           copy angle\libGLESv2.dll dependencies\lib\libEGL.dll
+
+      - name: Install LLVM
+        run: |
+          $llvmVersion = "11.0.1"
+          $exePath = "$env:temp\LLVM-$llvmVersion-win64.exe"
+          (New-Object Net.WebClient).DownloadFile("https://github.com/llvm/llvm-project/releases/download/llvmorg-$llvmVersion/LLVM-$llvmVersion-win64.exe", $exePath)
+          cmd /c start /wait $exePath /S
+          set /p="$env:ProgramFiles\LLVM\bin" < nul >> %GITHUB_PATH%
+          cmd /c clang --version
 
       - name: Build gl-native-node
         working-directory: gl-native-node
