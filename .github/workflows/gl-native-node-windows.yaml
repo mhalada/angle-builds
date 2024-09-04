@@ -61,13 +61,12 @@ jobs:
           if ($lastexitcode -lt 8) { $global:LASTEXITCODE = $null }
 
       - name: Download ANGLE dependency
-        working-directory: gl-native-node
         run: |
           curl -o angle.zip https://github.com/mhalada/angle-builds/releases/download/v0.0.1/angle-${{ matrix.target-cpu }}-win.zip
           mkdir angle
           tar -xf angle.zip -C angle
-          copy angle/libEGL.dll dependencies\lib\libEGL.dll
-          copy angle/libGLESv2.dll dependencies\lib\libEGL.dll
+          copy angle\libEGL.dll dependencies\lib\libEGL.dll
+          copy angle\libGLESv2.dll dependencies\lib\libEGL.dll
 
       - name: Build gl-native-node
         working-directory: gl-native-node
