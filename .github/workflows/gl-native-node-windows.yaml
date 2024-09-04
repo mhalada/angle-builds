@@ -65,6 +65,7 @@ jobs:
           curl -o angle.zip https://github.com/mhalada/angle-builds/releases/download/v0.0.1/angle-${{ matrix.target-cpu }}-win.zip
           mkdir angle
           tar -xf angle.zip -C angle
+          tree .
           copy angle\libEGL.dll dependencies\lib\libEGL.dll
           copy angle\libGLESv2.dll dependencies\lib\libEGL.dll
 
