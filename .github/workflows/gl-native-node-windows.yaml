@@ -62,7 +62,7 @@ jobs:
 
       - name: Download ANGLE dependency
         run: |
-          curl -O angle.zip https://github.com/mhalada/angle-builds/releases/download/v0.0.1/angle-${{ matrix.target-cpu }}-win.zip
+          curl -L -o angle.zip https://github.com/mhalada/angle-builds/releases/download/v0.0.1/angle-${{ matrix.target-cpu }}-win.zip
           ls -as .\angle.zip
           mkdir angle
           tar -xf angle.zip -C angle
