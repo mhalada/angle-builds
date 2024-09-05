@@ -104,6 +104,7 @@ jobs:
           echo $env:PATH
           # $env:PATH = ($env:PATH -split ';' | Where-Object { $_ -ne 'C:\Program Files\LLVM\bin' }) -join ';'
           npm install -g cmake-js node-addon-api
+          $env:NODE_PATH=C:\npm\prefix\node_modules
           ./build.bat
 
       - name: Artifact Preparation
