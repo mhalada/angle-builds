@@ -96,6 +96,15 @@ jobs:
 
       #     ./install_vs_llvm_toolset.bat
 
+      - name: Replace multiple files
+        uses: richardrigutins/replace-in-files@v2
+        with:
+          files: 'gl-native-node/vendor/mapbox-gl-native/vendor/boost/**/*.*'
+          search-text: 'BOOST_CONSTEXPR'
+          replacement-text: 'constexpr'
+          exclude: '**/config/**'
+          max-parallelism: 10
+
       - name: Build gl-native-node
         working-directory: gl-native-node
         run: |
