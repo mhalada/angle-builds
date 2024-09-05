@@ -92,7 +92,7 @@ jobs:
           cmd /c start /wait $exePath /S
           echo "$env:ProgramFiles\LLVM\bin" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
           cmd /c clang --version
-          copy Directory.build.props gl-native-node\build\vendor\mapbox-gl-native\Directory.build.props
+          copy Directory.build.props gl-native-node\Directory.build.props
 
       #     # $vsixPath = "$env:TEMP\llvm.vsix"
       #     # Write-Host "Downloading llvm.vsix..."
