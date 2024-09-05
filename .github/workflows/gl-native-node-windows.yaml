@@ -84,11 +84,11 @@ jobs:
           copy angle\libEGL.dll dependencies\lib\libEGL.dll
           copy angle\libGLESv2.dll dependencies\lib\libEGL.dll
 
-      - name: Install LLVM and Clang
-        uses: KyleMayes/install-llvm-action@v2
-        with:
-          version: "11.0.1"
-          env: true
+      # - name: Install LLVM and Clang
+      #   uses: KyleMayes/install-llvm-action@v2
+      #   with:
+      #     version: "11.0.1"
+      #     env: true
 
       # - name: Install LLVM
       #   run: |
