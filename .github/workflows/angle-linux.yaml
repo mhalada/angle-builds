@@ -9,9 +9,6 @@ on:
         required: true
         default: '6367'
 
-env:
-  ANGLE_BUILDER_OUTPUT_FOLDER: ./angle-builder-output
-
 jobs:
   build:
     runs-on: ubuntu-20.04
