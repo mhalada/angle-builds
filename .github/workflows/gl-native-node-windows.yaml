@@ -74,14 +74,14 @@ jobs:
           copy angle\libEGL.dll dependencies\lib\libEGL.dll
           copy angle\libGLESv2.dll dependencies\lib\libEGL.dll
 
-      - name: Install LLVM
-        run: |
-          $llvmVersion = "11.0.1"
-          $exePath = "$env:temp\LLVM-$llvmVersion-win64.exe"
-          (New-Object Net.WebClient).DownloadFile("https://github.com/llvm/llvm-project/releases/download/llvmorg-$llvmVersion/LLVM-$llvmVersion-win64.exe", $exePath)
-          cmd /c start /wait $exePath /S
-          echo "$env:ProgramFiles\LLVM\bin" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
-          cmd /c clang --version
+      # - name: Install LLVM
+      #   run: |
+      #     $llvmVersion = "11.0.1"
+      #     $exePath = "$env:temp\LLVM-$llvmVersion-win64.exe"
+      #     (New-Object Net.WebClient).DownloadFile("https://github.com/llvm/llvm-project/releases/download/llvmorg-$llvmVersion/LLVM-$llvmVersion-win64.exe", $exePath)
+      #     cmd /c start /wait $exePath /S
+      #     echo "$env:ProgramFiles\LLVM\bin" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
+      #     cmd /c clang --version
 
       - name: Build gl-native-node
         working-directory: gl-native-node
@@ -89,6 +89,7 @@ jobs:
           echo $env:LIBS_DIR
           echo $env:GITHUB_PATH
           echo $env:PATH
+          choco upgrade llvm
           npm install -g cmake-js node-addon-api
           ./build.bat
 
