@@ -9,3 +9,4 @@
 - https://chromiumdash.appspot.com/branches
 - https://developers.google.com/speed/webp/docs/compiling#building
 - https://learn.microsoft.com/en-us/cpp/build/clang-support-msbuild?view=msvc-170
+- https://github.com/KyleMayes/install-llvm-action
