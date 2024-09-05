@@ -89,7 +89,7 @@ jobs:
           echo $env:LIBS_DIR
           echo $env:GITHUB_PATH
           echo $env:PATH
-          $env:PATH = ($env:PATH -split ';' | Where-Object { $_ -ne 'C:\Program Files\LLVM\bin' }) -join ';'
+          # $env:PATH = ($env:PATH -split ';' | Where-Object { $_ -ne 'C:\Program Files\LLVM\bin' }) -join ';'
           npm install -g cmake-js node-addon-api
           ./build.bat
 
