@@ -54,7 +54,7 @@ jobs:
       - name: Configure ANGLE
         env:
           ANGLE_TARGET_CPU: ${{ matrix.target-cpu }}
-          ANGLE_TARGET_OS: ${{ matrix.target-os }}
+          ANGLE_TARGET_OS: mac
         working-directory: angle
         run: gn gen out/Release --args="target_cpu=\"$ANGLE_TARGET_CPU\" target_os=\"$ANGLE_TARGET_OS\" is_debug=false is_component_build=false"
 
