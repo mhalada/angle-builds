@@ -39,10 +39,10 @@ jobs:
         working-directory: depot_tools
         run: echo "$(pwd)" >> $GITHUB_PATH
 
-      - name: Create ANGLE Directory
-        run: mkdir angle
+      # - name: Create ANGLE Directory
+      #   run: mkdir angle
       - name: Fetch ANGLE
-        working-directory: angle
+        # working-directory: angle
         run: fetch angle
       - name: Checkout ANGLE Branch
         if: ${{ github.event_name == 'workflow_dispatch' && inputs.branch != 'main' }}
