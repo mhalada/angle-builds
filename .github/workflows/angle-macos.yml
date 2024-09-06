@@ -27,7 +27,6 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Free Disk Space
-        if: ${{ matrix.target-cpu == 'arm64' }}
         run: |
           chmod +x ./clean_macos_runner.sh
           ./clean_macos_runner.sh
@@ -78,7 +77,6 @@ jobs:
         run: autoninja -C out/Release
       - name: Artifact Preparation
         run: |
-          ls -R .
           mkdir output
           cp angle/out/Release/libEGL.dylib output/libEGL.dylib
           cp angle/out/Release/libGLESv2.dylib output/libGLESv2.dylib
