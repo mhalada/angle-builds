@@ -78,6 +78,7 @@ jobs:
       - name: Artifact Preparation
         run: |
           mkdir output
+          ls -R angle/out/Release
           cp angle/out/Release/libEGL.dylib output/libEGL.dylib
           cp angle/out/Release/libGLESv2.dylib output/libGLESv2.dylib
           cp angle/out/Release/libvk_swiftshader.dylib output/libvk_swiftshader.dylib
