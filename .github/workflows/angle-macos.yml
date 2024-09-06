@@ -33,24 +33,61 @@ jobs:
           ./clean_macos_runner.sh
         shell: bash
 
-      - name: Checkout angle-builder
-        uses: actions/checkout@v4
-        with:
-            repository: 'kivy/angle-builder'
-            ref: 'chromium-6367_rev1'
+      - name: Download Depot Tools
+        run: git clone https://chromium.googlesource.com/chromium/tools/depot_tools.git
+      - name: Prepend Depot Tools to PATH
+        working-directory: depot_tools
+        run: echo "$(pwd)" >> $GITHUB_PATH
 
-      - name: Setup Python
-        uses: actions/setup-python@v5
+      - name: Create ANGLE Directory
+        run: mkdir angle
+      - name: Fetch ANGLE
+        working-directory: angle
+        run: fetch angle
+      - name: Checkout ANGLE Branch
+        if: ${{ github.event_name == 'workflow_dispatch' && inputs.branch != 'main' }}
+        working-directory: angle
+        run: git checkout origin/chromium/${{ inputs.branch }}
+      - name: Sync ANGLE
+        working-directory: angle
+        run: gclient sync
+      - name: Configure ANGLE
+        env:
+          ANGLE_TARGET_CPU: ${{ matrix.target-cpu }}
+          ANGLE_TARGET_OS: ${{ matrix.target-os }}
+        working-directory: angle
+        run: gn gen out/Release --args="target_cpu=\"$ANGLE_TARGET_CPU\" target_os=\"$ANGLE_TARGET_OS\" is_debug=false is_component_build=false"
 
-      - name: Install angle-builder
-        run: pip install .
+      # - name: Checkout angle-builder
+      #   uses: actions/checkout@v4
+      #   with:
+      #       repository: 'kivy/angle-builder'
+      #       ref: 'chromium-6367_rev1'
 
-      - name: Build artifacts for ${{ matrix.target-os }}-${{ matrix.target-cpu }}
-        run: angle-builder ${{ matrix.target-os }}-${{ matrix.target-cpu }} --branch chromium/${{ inputs.branch }} --artifact-output-folder $ANGLE_BUILDER_OUTPUT_FOLDER
+      # - name: Setup Python
+      #   uses: actions/setup-python@v5
 
-      - name: Store artifacts
+      # - name: Install angle-builder
+      #   run: pip install .
+
+      # - name: Build artifacts for ${{ matrix.target-os }}-${{ matrix.target-cpu }}
+      #   run: angle-builder ${{ matrix.target-os }}-${{ matrix.target-cpu }} --branch chromium/${{ inputs.branch }} --artifact-output-folder $ANGLE_BUILDER_OUTPUT_FOLDER
+
+      - name: Build
+        working-directory: angle
+        run: autoninja -C out/Release
+      - name: Artifact Preparation
+        run: |
+          ls -R .
+          mkdir output
+          cp angle/out/Release/libEGL.dylib output/libEGL.dylib
+          cp angle/out/Release/libGLESv2.dylib output/libGLESv2.dylib
+          cp angle/out/Release/libvk_swiftshader.dylib output/libvk_swiftshader.dylib
+          cp angle/out/Release/libvulkan.dylib output/libvulkan.dylib
+          cp angle/out/Release/vk_swiftshader_icd.json output/vk_swiftshader_icd.json
+      - name: Upload Artifacts
         uses: actions/upload-artifact@v4
         with:
           name: angle-${{ matrix.target-cpu }}-${{ matrix.target-os }}
-          path: ${{ env.ANGLE_BUILDER_OUTPUT_FOLDER }}
+          path: output/
           retention-days: 1
