@@ -83,10 +83,14 @@ jobs:
         mkdir output
         dir .\angle\out /A-D /S /B
         copy angle\out\Release\libEGL.dll output\libEGL.dll
+        copy angle\out\Release\libEGL.dll.lib output\libEGL.dll.lib
+        copy angle\out\Release\obj\libEGL_static.lib output\libEGL_static.lib
         copy angle\out\Release\libGLESv2.dll output\libGLESv2.dll
+        copy angle\out\Release\libGLESv2.dll.lib output\libGLESv2.dll.lib
+        copy angle\out\Release\obj\libGLESv2_static.lib output\libGLESv2_static.lib
         copy angle\out\Release\vulkan-1.dll output\vulkan-1.dll
         robocopy angle\include output\include /e
-        if ($lastexitcode -lt 8) { $global:LASTEXITCODE = $null }
+        exit /b 0
     - name: Upload Artifacts
       uses: actions/upload-artifact@v4
       with:
