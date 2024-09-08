@@ -84,6 +84,18 @@ jobs:
           copy angle\libEGL.dll dependencies\lib\libEGL.dll
           copy angle\libGLESv2.dll dependencies\lib\libEGL.dll
 
+      - name: Download libuv dependency
+        run: |
+          mkdir libuv
+          cd libuv
+          curl -o libuv.zip https://dist.libuv.org/dist/v1.18.0/libuv-x64-v1.18.0.build20.exe
+          7z x libuv.zip
+          cd ..
+          copy libuv\libuv.dll dependencies\lib\libuv.dll
+          copy libuv\libuv.lib dependencies\lib\libuv.lib
+          robocopy libuv\include dependencies\include /e
+          if ($lastexitcode -lt 8) { $global:LASTEXITCODE = $null }
+
       # - name: Install LLVM and Clang
       #   uses: KyleMayes/install-llvm-action@v2
       #   with:
