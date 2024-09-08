@@ -13,3 +13,4 @@
 - https://github.com/mmozeiko/build-angle
 - https://github.com/webrogue-runtime/angle-builder
 - https://issues.angleproject.org/issues/40096682
+- https://github.com/KhronosGroup/VK-GL-CTS/issues/266

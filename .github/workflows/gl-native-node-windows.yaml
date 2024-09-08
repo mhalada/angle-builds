@@ -41,7 +41,7 @@ jobs:
       - name: Checkout mapbox-gl-native dependency
         uses: actions/checkout@v4
         with:
-            repository: 'maptiler/mapbox-gl-native-private'
+            repository: 'mhalada/mapbox-gl-native-private'
             ref: 'maptiler'
             path: gl-native-node/vendor/mapbox-gl-native
             token: ${{ secrets.GH_PAT }}
