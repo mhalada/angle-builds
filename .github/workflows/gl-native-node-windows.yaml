@@ -55,10 +55,13 @@ jobs:
             path: gl-native-node/vendor/mapbox-gl-native/vendor/boost
             token: ${{ secrets.GH_PAT }}
 
+      - name: Setup LIBS_DIR
+        run: |
+          mkdir dist dependencies\apps, dependencies\bin, dependencies\include, dependencies\lib
+          echo "LIBS_DIR=$(Get-Item .)\dependencies" >> $env:GITHUB_ENV
+
       - name: Download libwebp dependency
         run: |
-          mkdir dependencies\apps, dependencies\bin, dependencies\include, dependencies\lib
-          echo "LIBS_DIR=$(Get-Item .)\dependencies" >> $env:GITHUB_ENV
           curl -o libwebp.zip https://storage.googleapis.com/downloads.webmproject.org/releases/webp/libwebp-1.3.0-windows-x64.zip
           mkdir libwebp
           tar -xf libwebp.zip -C libwebp
