@@ -85,6 +85,8 @@ jobs:
         copy angle\out\Release\libEGL.dll output\libEGL.dll
         copy angle\out\Release\libGLESv2.dll output\libGLESv2.dll
         copy angle\out\Release\vulkan-1.dll output\vulkan-1.dll
+        robocopy angle\include output\include /e
+        if ($lastexitcode -lt 8) { $global:LASTEXITCODE = $null }
     - name: Upload Artifacts
       uses: actions/upload-artifact@v4
       with:
