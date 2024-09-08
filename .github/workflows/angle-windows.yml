@@ -81,7 +81,7 @@ jobs:
     - name: Artifact Preparation
       run: |
         mkdir output
-        Get-ChildItem -Recurse angle\out\
+        dir .\angle\out /A-D /S /B
         copy angle\out\Release\libEGL.dll output\libEGL.dll
         copy angle\out\Release\libGLESv2.dll output\libGLESv2.dll
         copy angle\out\Release\vulkan-1.dll output\vulkan-1.dll
