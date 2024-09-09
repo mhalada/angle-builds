@@ -42,7 +42,7 @@ jobs:
       run: |
         import os
         
-        for i in range(250):
+        for i in range(3):
             if os.system("git clone --filter=tree:0 https://chromium.googlesource.com/chromium/tools/depot_tools depot_tools") == 0:
                 raise SystemExit(0)
         
