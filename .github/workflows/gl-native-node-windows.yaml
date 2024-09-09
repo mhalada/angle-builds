@@ -151,7 +151,7 @@ jobs:
         working-directory: gl-native-node
         run: |
           mkdir ../output
-          copy dist/mbgl-server.node ../output/mbgl-win32-${{ matrix.target-cpu }}.node
+          copy mbgl-server.node ../output/mbgl-win32-${{ matrix.target-cpu }}.node
       - name: Upload Artifacts
         uses: actions/upload-artifact@v4
         with:
