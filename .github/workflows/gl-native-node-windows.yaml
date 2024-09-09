@@ -85,7 +85,13 @@ jobs:
           mkdir angle
           tar -xf angle.zip -C angle
           copy angle\libEGL.dll dependencies\lib\libEGL.dll
-          copy angle\libGLESv2.dll dependencies\lib\libEGL.dll
+          copy angle\libGLESv2.dll dependencies\lib\libGLESv2.dll
+          copy angle\libEGL_static.lib dependencies\lib\libEGL.lib
+          copy angle\libGLESv2_static.lib dependencies\lib\libGLESv2.lib
+          copy angle\libEGL_static.lib dist\libEGL.lib
+          copy angle\libGLESv2_static.lib dist\libGLESv2.lib
+          robocopy angle\include dependencies\include /e
+          if ($lastexitcode -lt 8) { $global:LASTEXITCODE = $null }
 
       - name: Download libuv dependency
         run: |
