@@ -14,3 +14,4 @@
 - https://github.com/webrogue-runtime/angle-builder
 - https://issues.angleproject.org/issues/40096682
 - https://github.com/KhronosGroup/VK-GL-CTS/issues/266
+- https://stackoverflow.com/questions/22744262/cant-call-stdmax-because-minwindef-h-defines-max

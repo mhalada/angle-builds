@@ -87,10 +87,13 @@ jobs:
           tar -xf angle.zip -C angle
           copy angle\libEGL.dll dependencies\lib\libEGL.dll
           copy angle\libGLESv2.dll dependencies\lib\libGLESv2.dll
-          copy angle\libEGL_static.lib dependencies\lib\libEGL.lib
-          copy angle\libGLESv2_static.lib dependencies\lib\libGLESv2.lib
-          copy angle\libEGL_static.lib gl-native-node\dist\libEGL.lib
-          copy angle\libGLESv2_static.lib gl-native-node\dist\libGLESv2.lib
+          copy angle\libEGL.dll gl-native-node\dist\libEGL.dll
+          copy angle\libGLESv2.dll gl-native-node\dist\libGLESv2.dll
+
+          copy angle\libEGL.dll.lib dependencies\lib\libEGL.lib
+          copy angle\libGLESv2.dll.lib dependencies\lib\libGLESv2.lib
+          copy angle\libEGL.dll.lib gl-native-node\dist\libEGL.lib
+          copy angle\libGLESv2.dll.lib gl-native-node\dist\libGLESv2.lib
           robocopy angle\include dependencies\include /e
           if ($lastexitcode -lt 8) { $global:LASTEXITCODE = $null }
 
