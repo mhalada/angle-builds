@@ -57,7 +57,7 @@ jobs:
 
       - name: Setup LIBS_DIR
         run: |
-          mkdir dist dependencies\apps, dependencies\bin, dependencies\include, dependencies\lib
+          mkdir dist, dependencies\apps, dependencies\bin, dependencies\include, dependencies\lib
           echo "LIBS_DIR=$(Get-Item .)\dependencies" >> $env:GITHUB_ENV
 
       - name: Download libwebp dependency
