@@ -109,11 +109,11 @@ jobs:
           robocopy libuv\include dependencies\include /e
           if ($lastexitcode -lt 8) { $global:LASTEXITCODE = $null }
 
-      - name: Install LLVM and Clang
-        uses: KyleMayes/install-llvm-action@v2
-        with:
-          version: "11.0.1"
-          env: true
+      # - name: Install LLVM and Clang
+      #   uses: KyleMayes/install-llvm-action@v2
+      #   with:
+      #     version: "11.0.1"
+      #     env: true
 
       # - name: Install LLVM
       #   run: |
