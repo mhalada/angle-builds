@@ -31,8 +31,8 @@ jobs:
           sed -i '' 's/pip3 install --user macpack/pip install --break-system-packages --user macpack/g' prebuild/macOS/preinstall.sh
           . prebuild/macOS/preinstall.sh
           pkg-config --variable pc_path pkg-config
-          mkdir /usr/local/lib/pkgconfig
-          cp ../giflib.pc /usr/local/lib/pkgconfig/
+          mkdir -p /opt/homebrew/lib/pkgconfig
+          cp ../giflib.pc /opt/homebrew/lib/pkgconfig/
           pkg-config giflib --libs
           pkg-config giflib --cflags-only-I | sed s/-I//g
           cp prebuild/macOS/binding.gyp binding.gyp
