@@ -35,7 +35,7 @@ jobs:
           chmod +x ./prebuild/Linux/build-linux.sh
           docker build --load --platform linux/arm64 -t node-canvas:build . -f ../node-canvas-patches/Dockerfile
           mkdir build
-          docker run --platform linux/arm64 --rm -v ./build:/data/build node-canvas:build ./prebuild/Linux/build-linux.sh
+          docker run --platform linux/arm64 --rm -v ./build:/data/output node-canvas:build ./prebuild/Linux/build-linux.sh
 
       - name: Test binary
         run: |
