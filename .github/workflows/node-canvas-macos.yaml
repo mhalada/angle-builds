@@ -47,5 +47,5 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: node-canvas-arm64-macos
-          path: node-canvas/Release
+          path: node-canvas/build/Release
           retention-days: 1
