@@ -8,6 +8,9 @@ jobs:
     runs-on: macos-14
 
     steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
       - name: Checkout node-canvas
         uses: actions/checkout@v4
         with:
@@ -27,6 +30,8 @@ jobs:
           npm install --ignore-scripts
           sed -i '' 's/pip3 install --user macpack/pip install --break-system-packages --user macpack/g' prebuild/macOS/preinstall.sh
           . prebuild/macOS/preinstall.sh
+          mkdir /opt/homebrew/Cellar//giflib/5.2.2/lib/pkgconfig
+          cp ../giflib.pc /opt/homebrew/Cellar//giflib/5.2.2/lib/pkgconfig/
           pkg-config giflib --libs
           pkg-config giflib --cflags-only-I | sed s/-I//g
           cp prebuild/macOS/binding.gyp binding.gyp
