@@ -32,7 +32,7 @@
         '<!@(pkg-config pangocairo --libs)',
         '<!@(pkg-config freetype2 --libs)',
         '<!@(pkg-config librsvg-2.0 --libs)',
-        '-ljpeg',
+        '<!@(pkg-config libjpeg --libs)',
         '<!@(pkg-config giflib --libs)'
       ],
       'include_dirs': [
