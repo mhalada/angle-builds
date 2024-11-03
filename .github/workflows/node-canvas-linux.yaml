@@ -1,0 +1,52 @@
+name: node-canvas Linux ARM64 Build
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-20.04
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Checkout node-canvas
+        uses: actions/checkout@v4
+        with:
+          repository: 'Automattic/node-canvas'
+          ref: 'v2.11.2'
+          path: node-canvas
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+        with:
+          platforms: linux/arm64
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+        with:
+          install: true
+          platforms: linux/arm64
+
+      - name: Build
+        working-directory: node-canvas
+        run: |
+          docker build --load --platform linux/arm64 -t node-canvas:build . -f ../node-canvas-patches/Dockerfile
+          docker run --platform linux/arm64 --rm -v $(pwd):/data node-canvas:build ../node-canvas-patches/build-linux.sh
+
+      - name: Test binary
+        run: |
+          cd /root/harfbuzz-* && make uninstall
+          cd /root/cairo-* && make uninstall
+          cd /root/pango-* && make uninstall
+          cd /root/libpng-* && make uninstall
+          cd /root/libjpeg-* && make uninstall
+          cd /root/giflib-* && make uninstall
+          npm test
+
+      - name: Upload Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: node-canvas-arm64-linux
+          path: node-canvas/build/Release
+          retention-days: 1
