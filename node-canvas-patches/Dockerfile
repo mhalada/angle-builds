@@ -1,7 +1,7 @@
 FROM ubuntu:20.04
 
 ENV DEBIAN_FRONTEND=noninteractive
-RUN apt-get -qq update && apt-get -yq install curl
+RUN apt-get -qq update && apt-get -yq install build-essential curl git
 
 COPY . /data
 WORKDIR /data

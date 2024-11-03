@@ -31,8 +31,9 @@ jobs:
       - name: Build
         working-directory: node-canvas
         run: |
+          cp ../node-canvas-patches/build-linux.sh ./prebuild/Linux/
           docker build --load --platform linux/arm64 -t node-canvas:build . -f ../node-canvas-patches/Dockerfile
-          docker run --platform linux/arm64 --rm -v $(pwd):/data node-canvas:build ../node-canvas-patches/build-linux.sh
+          docker run --platform linux/arm64 --rm -v $(pwd):/data node-canvas:build ./prebuild/Linux/build-linux.sh
 
       - name: Test binary
         run: |
