@@ -40,7 +40,7 @@ jobs:
       - name: Test binary
         working-directory: node-canvas
         run: |
-          brew uninstall --force cairo pango librsvg giflib harfbuzz
+          brew uninstall --ignore-dependencies --force cairo pango librsvg giflib harfbuzz
           npm test
   
       - name: Make bundle
