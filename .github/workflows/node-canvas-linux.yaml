@@ -33,7 +33,7 @@ jobs:
         run: |
           cp ../node-canvas-patches/build-linux.sh ./prebuild/Linux/
           chmod +x ./prebuild/Linux/build-linux.sh
-          sed -i 's/lddtree.sh/lddtree/g' prebuild/Linux/bundle.sh
+          sed -i 's/lddtree.sh/\/data\/pax-utils\/lddtree.sh/g' prebuild/Linux/bundle.sh
           docker build --load --platform linux/arm64 -t node-canvas:build . -f ../node-canvas-patches/Dockerfile
           mkdir build
           docker run --platform linux/arm64 --rm -v ./build:/data/output node-canvas:build ./prebuild/Linux/build-linux.sh
