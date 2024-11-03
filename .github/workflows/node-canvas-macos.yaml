@@ -32,11 +32,8 @@ jobs:
           . prebuild/macOS/preinstall.sh
           pkg-config --variable pc_path pkg-config
           mkdir -p /opt/homebrew/lib/pkgconfig
-          cp ../giflib.pc /opt/homebrew/lib/pkgconfig/
-          # pkg-config giflib --libs
-          # pkg-config giflib --cflags-only-I | sed s/-I//g
-          sed -i '' 's/-lgif/<!@(pkg-config giflib --libs)/g' prebuild/macOS/binding.gyp
-          cp prebuild/macOS/binding.gyp binding.gyp
+          cp ../node-canvas-patches/giflib.pc /opt/homebrew/lib/pkgconfig/
+          cp ../node-canvas-patches/binding.gyp binding.gyp
           node-gyp rebuild -j 2
           . prebuild/macOS/bundle.sh
   
