@@ -16,5 +16,4 @@ RUN npm install --ignore-scripts
 RUN . prebuild/Linux/preinstall.sh
 RUN cp prebuild/Linux/binding.gyp binding.gyp
 
-ENV NODE_PATH=/data/node_modules
 CMD ["./build.sh"]
