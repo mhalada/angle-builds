@@ -5,5 +5,5 @@ node-gyp rebuild -j 2
 cp -a /data/build/. /data/output/
 
 apt-get -y remove libcairo2-dev libpango1.0-dev libjpeg-dev libgif-dev librsvg2-dev
-apt-get autoremove
+apt-get -y autoremove
 npm test
