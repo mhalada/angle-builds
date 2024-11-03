@@ -47,6 +47,8 @@ jobs:
         working-directory: node-canvas
         id: make_bundle
         run: . prebuild/tarball.sh
+        env:
+          CANVAS_VERSION_TO_BUILD: 'v2.11.2'
 
       - name: Artifact Preparation
         run: |
