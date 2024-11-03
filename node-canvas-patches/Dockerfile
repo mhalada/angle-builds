@@ -15,7 +15,7 @@ COPY . /data
 
 # Set up Node.js
 RUN curl -fsSL https://deb.nodesource.com/setup_18.x | bash -
-RUN apt-get install nodejs=18.5.0-1nodesource1
+RUN apt-get -y install nodejs=18.5.0-1nodesource1
 
 RUN npm install -g node-gyp \
   && npm install --ignore-scripts \
