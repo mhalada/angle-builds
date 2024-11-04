@@ -4,7 +4,7 @@ ENV DEBIAN_FRONTEND=noninteractive
 RUN apt-get -qq update && apt-get -yq install build-essential curl git
 RUN apt-get -yq install pkg-config libcairo2-dev libpango1.0-dev libjpeg-dev libgif-dev librsvg2-dev
 # RUN apt-get -qq update && apt-get -yq install curl git cmake make gcc g++ nasm wget gperf bzip2 uuid-dev perl libxml-parser-perl python3 python3-pip
-# RUN apt-get -yq install pax-utils
+RUN apt-get -yq install pax-utils
 
 # RUN bash -c 'cd; curl -LO https://pkg-config.freedesktop.org/releases/pkg-config-0.29.2.tar.gz; tar -xvf pkg-config-0.29.2.tar.gz; cd pkg-config-0.29.2; ./configure --with-internal-glib; make; make install'
 # RUN bash -c 'cd; curl -O https://zlib.net/fossils/zlib-1.2.11.tar.gz; tar -xvf zlib-1.2.11.tar.gz; cd zlib-1.2.11; ./configure; make; make install'
