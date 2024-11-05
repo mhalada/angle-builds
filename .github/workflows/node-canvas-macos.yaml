@@ -36,7 +36,12 @@ jobs:
           cp ../node-canvas-patches/binding.gyp binding.gyp
           node-gyp rebuild -j 2
           . prebuild/macOS/bundle.sh
-  
+
+      - name: Sign the executable
+        uses: indygreg/apple-code-sign-action@v1
+        with:
+          input_path: node-canvas/build/Release/canvas.node
+
       - name: Test binary
         working-directory: node-canvas
         run: |
