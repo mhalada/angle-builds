@@ -48,7 +48,7 @@ jobs:
         run: |
           wget https://github.com/indygreg/apple-platform-rs/releases/download/apple-codesign%2F0.28.0/apple-codesign-0.28.0-macos-universal.tar.gz
           tar -xvf apple-codesign-0.28.0-macos-universal.tar.gz
-          for file in ./build/Release/
+          for file in ./build/Release/*
           do
             ./apple-codesign-0.28.0-macos-universal/rcodesign sign "$file"
           done
