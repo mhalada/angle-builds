@@ -42,7 +42,7 @@ jobs:
       - name: Sign the executable
         uses: indygreg/apple-code-sign-action@v1
         with:
-          input_path: node-canvas/build/Release/*
+          input_path: node-canvas/build/Release/
 
       - name: Test binary
         working-directory: node-canvas
