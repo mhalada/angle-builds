@@ -36,11 +36,13 @@ jobs:
           cp ../node-canvas-patches/binding.gyp binding.gyp
           node-gyp rebuild -j 2
           . prebuild/macOS/bundle.sh
+          rm -rf build/Release/obj.target
 
+      # https://github.com/Automattic/node-canvas/pull/2354
       - name: Sign the executable
         uses: indygreg/apple-code-sign-action@v1
         with:
-          input_path: node-canvas/build/Release/canvas.node
+          input_path: node-canvas/build/Release/*
 
       - name: Test binary
         working-directory: node-canvas
