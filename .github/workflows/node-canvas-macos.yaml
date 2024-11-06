@@ -39,10 +39,19 @@ jobs:
           rm -rf build/Release/obj.target
 
       # https://github.com/Automattic/node-canvas/pull/2354
+      # - name: Sign the executable
+      #   uses: indygreg/apple-code-sign-action@v1
+      #   with:
+      #     input_path: node-canvas/build/Release/node.canvas
       - name: Sign the executable
-        uses: indygreg/apple-code-sign-action@v1
-        with:
-          input_path: node-canvas/build/Release/
+        working-directory: node-canvas
+        run: |
+          wget https://github.com/indygreg/apple-platform-rs/releases/download/apple-codesign%2F0.28.0/apple-codesign-0.28.0-macos-universal.tar.gz
+          tar -xvf apple-codesign-0.28.0-macos-universal.tar.gz
+          for file in ./build/Release/
+          do
+            rcodesign sign "$file"
+          done
 
       - name: Test binary
         working-directory: node-canvas
