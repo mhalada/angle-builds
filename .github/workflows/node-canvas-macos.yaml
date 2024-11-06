@@ -50,7 +50,7 @@ jobs:
           tar -xvf apple-codesign-0.28.0-macos-universal.tar.gz
           for file in ./build/Release/
           do
-            rcodesign sign "$file"
+            ./apple-codesign-0.28.0-macos-universal/rcodesign sign "$file"
           done
 
       - name: Test binary
