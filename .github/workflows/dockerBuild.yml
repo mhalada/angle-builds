@@ -1,0 +1,83 @@
+# https://docs.docker.com/build/ci/github-actions/multi-platform/#distribute-build-across-multiple-runners
+name: Build and push Docker image
+
+on:
+  workflow_dispatch:
+    inputs:
+      tagAsLatest:
+        type: boolean
+        default: true
+        description: 'Tag the pushed image as latest'
+
+env:
+  WORKDIR: docker-build-${{ github.sha }}
+  NODE_AUTH_TOKEN: test
+  IMAGE_TAG: 4.6.0
+  FTP_HOST: test
+  FTP_USER: test
+  FTP_PASS: test
+  FTP_PATH: test
+  GITHUB_COMMIT_SHA: ${{ github.sha }}
+
+jobs:
+  deploy_image:
+    name: Deploy Docker image to DockerHub
+    runs-on: ubuntu-20.04
+    defaults:
+      run:
+        shell: bash
+        working-directory: ${{ env.WORKDIR }}
+
+    steps:
+      - name: Checkout Project
+        uses: actions/checkout@v4
+        with:
+          path: ${{ env.WORKDIR }}
+          fetch-depth: 0
+
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+            username: mhalada1
+            password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+        with:
+          platforms: linux/amd64,linux/arm64
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+        with:
+          install: true
+          platforms: linux/amd64,linux/arm64
+
+      - name: Build & Push the Docker image to DockerHub
+        id: build
+        working-directory: maptiler-server
+        run: |
+          docker buildx build --platform linux/amd64,linux/arm64 \
+            --build-arg NODE_AUTH_TOKEN=${NODE_AUTH_TOKEN:?NODE_AUTH_TOKEN is required} \
+            --build-arg GITHUB_COMMIT_SHA=${GITHUB_COMMIT_SHA:?GITHUB_COMMIT_SHA is required} \
+            --build-arg GITHUB_RUN_NUMBER=${GITHUB_RUN_NUMBER:?GITHUB_RUN_NUMBER is required} \
+            --build-arg FTP_HOST=${FTP_HOST:?FTP_HOST is required} \
+            --build-arg FTP_USER=${FTP_USER:?FTP_USER is required} \
+            --build-arg FTP_PASS=${FTP_PASS:?FTP_PASS is required} \
+            --build-arg FTP_PATH=${FTP_PATH:?FTP_PATH is required} \
+            -t mhalada1/server:${IMAGE_TAG:?IMAGE_TAG is required} \
+            --push .
+
+      - name: Tag the image as latest and to DockerHub
+        id: tag_latest
+        if: ${{ success() && inputs.tagAsLatest }}
+        working-directory: maptiler-server
+        run: |
+            docker buildx build --platform linux/amd64,linux/arm64 \
+            --build-arg NODE_AUTH_TOKEN=${NODE_AUTH_TOKEN:?NODE_AUTH_TOKEN is required} \
+            --build-arg GITHUB_COMMIT_SHA=${GITHUB_COMMIT_SHA:?GITHUB_COMMIT_SHA is required} \
+            --build-arg GITHUB_RUN_NUMBER=${GITHUB_RUN_NUMBER:?GITHUB_RUN_NUMBER is required} \
+            --build-arg FTP_HOST=${FTP_HOST:?FTP_HOST is required} \
+            --build-arg FTP_USER=${FTP_USER:?FTP_USER is required} \
+            --build-arg FTP_PASS=${FTP_PASS:?FTP_PASS is required} \
+            --build-arg FTP_PATH=${FTP_PATH:?FTP_PATH is required} \
+            -t mhalada1/server:latest \
+            --push .
