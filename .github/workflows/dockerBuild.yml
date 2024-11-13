@@ -45,33 +45,29 @@ jobs:
           install: true
           platforms: linux/amd64,linux/arm64
 
-      - name: Build & Push the Docker image to DockerHub
-        id: build
-        working-directory: maptiler-server
+      - name: Prepare Docker Buildx command
         run: |
-          docker buildx build --platform linux/amd64,linux/arm64 \
+          DOCKER_BUILD_CMD='docker buildx build --platform linux/amd64,linux/arm64 \
             --build-arg NODE_AUTH_TOKEN=${NODE_AUTH_TOKEN:?NODE_AUTH_TOKEN is required} \
             --build-arg GITHUB_COMMIT_SHA=${GITHUB_COMMIT_SHA:?GITHUB_COMMIT_SHA is required} \
             --build-arg GITHUB_RUN_NUMBER=${GITHUB_RUN_NUMBER:?GITHUB_RUN_NUMBER is required} \
             --build-arg FTP_HOST=${FTP_HOST:?FTP_HOST is required} \
             --build-arg FTP_USER=${FTP_USER:?FTP_USER is required} \
             --build-arg FTP_PASS=${FTP_PASS:?FTP_PASS is required} \
-            --build-arg FTP_PATH=${FTP_PATH:?FTP_PATH is required} \
-            -t mhalada1/server:${IMAGE_TAG:?IMAGE_TAG is required} \
-            --push .
+            --build-arg FTP_PATH=${FTP_PATH:?FTP_PATH is required}'
+          echo "DOCKER_BUILD_CMD=$DOCKER_BUILD_CMD" >> $GITHUB_ENV
+
+      - name: Build & Push the Docker image to DockerHub
+        id: build
+        working-directory: maptiler-server
+        run: |
+          PUSH_CMD="${{ env.DOCKER_BUILD_CMD }} --tag mhalada1/server:${IMAGE_TAG:?IMAGE_TAG is required} --push ."
+          eval "$PUSH_CMD"
 
       - name: Tag the image as latest and to DockerHub
         id: tag_latest
         if: ${{ success() && inputs.tagAsLatest }}
         working-directory: maptiler-server
         run: |
-            docker buildx build --platform linux/amd64,linux/arm64 \
-            --build-arg NODE_AUTH_TOKEN=${NODE_AUTH_TOKEN:?NODE_AUTH_TOKEN is required} \
-            --build-arg GITHUB_COMMIT_SHA=${GITHUB_COMMIT_SHA:?GITHUB_COMMIT_SHA is required} \
-            --build-arg GITHUB_RUN_NUMBER=${GITHUB_RUN_NUMBER:?GITHUB_RUN_NUMBER is required} \
-            --build-arg FTP_HOST=${FTP_HOST:?FTP_HOST is required} \
-            --build-arg FTP_USER=${FTP_USER:?FTP_USER is required} \
-            --build-arg FTP_PASS=${FTP_PASS:?FTP_PASS is required} \
-            --build-arg FTP_PATH=${FTP_PATH:?FTP_PATH is required} \
-            -t mhalada1/server:latest \
-            --push .
+          PUSH_CMD="${{ env.DOCKER_BUILD_CMD }} --tag mhalada1/server:latest --push ."
+          eval "$PUSH_CMD"
