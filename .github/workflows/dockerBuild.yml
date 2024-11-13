@@ -10,7 +10,6 @@ on:
         description: 'Tag the pushed image as latest'
 
 env:
-  WORKDIR: docker-build-${{ github.sha }}
   NODE_AUTH_TOKEN: test
   IMAGE_TAG: 4.6.0
   FTP_HOST: test
@@ -23,16 +22,11 @@ jobs:
   deploy_image:
     name: Deploy Docker image to DockerHub
     runs-on: ubuntu-20.04
-    defaults:
-      run:
-        shell: bash
-        working-directory: ${{ env.WORKDIR }}
 
     steps:
       - name: Checkout Project
         uses: actions/checkout@v4
         with:
-          path: ${{ env.WORKDIR }}
           fetch-depth: 0
 
       - name: Login to Docker Hub
