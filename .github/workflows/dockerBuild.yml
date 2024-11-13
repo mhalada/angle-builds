@@ -47,14 +47,14 @@ jobs:
 
       - name: Prepare Docker Buildx command
         run: |
-          DOCKER_BUILD_CMD='docker buildx build --platform linux/amd64,linux/arm64 \
+          DOCKER_BUILD_CMD="docker buildx build --platform linux/amd64,linux/arm64 \
             --build-arg NODE_AUTH_TOKEN=${NODE_AUTH_TOKEN:?NODE_AUTH_TOKEN is required} \
             --build-arg GITHUB_COMMIT_SHA=${GITHUB_COMMIT_SHA:?GITHUB_COMMIT_SHA is required} \
             --build-arg GITHUB_RUN_NUMBER=${GITHUB_RUN_NUMBER:?GITHUB_RUN_NUMBER is required} \
             --build-arg FTP_HOST=${FTP_HOST:?FTP_HOST is required} \
             --build-arg FTP_USER=${FTP_USER:?FTP_USER is required} \
             --build-arg FTP_PASS=${FTP_PASS:?FTP_PASS is required} \
-            --build-arg FTP_PATH=${FTP_PATH:?FTP_PATH is required}'
+            --build-arg FTP_PATH=${FTP_PATH:?FTP_PATH is required}"
           echo "DOCKER_BUILD_CMD=$DOCKER_BUILD_CMD" >> $GITHUB_ENV
 
       - name: Build & Push the Docker image to DockerHub
