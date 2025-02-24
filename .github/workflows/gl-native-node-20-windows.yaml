@@ -22,7 +22,7 @@ jobs:
       - name: Setup Node 20
         uses: actions/setup-node@v4
         with:
-          node-version: 20.17.0
+          node-version: 20.18.2
 
       - name: Checkout gl-native-node
         uses: actions/checkout@v4
