@@ -19,6 +19,9 @@ jobs:
         with:
           node-version: 16.20.2
 
+      - name: Checkout
+        uses: actions/checkout@v4
+
       - name: Checkout vtquery
         uses: actions/checkout@v4
         with:
