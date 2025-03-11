@@ -32,3 +32,15 @@ jobs:
       - name: Test vtquery
         working-directory: vtquery
         run: npm test
+
+      - name: Artifact Preparation
+        working-directory: vtquery
+        run: |
+          mkdir ../output
+          cp lib/binding/module.node ../output/module.node
+      - name: Upload Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: vtquery-${{ matrix.target-cpu }}-${{ matrix.target-os }}
+          path: output/
+          retention-days: 1
