@@ -1,0 +1,28 @@
+name: vtquery Linux Build
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-20.04
+
+    steps:
+      - name: Setup Node 16
+        uses: actions/setup-node@v4
+        with:
+          node-version: 16.20.2
+
+      - name: Checkout vtquery
+        uses: actions/checkout@v4
+        with:
+            repository: 'mapbox/vtquery'
+            path: vtquery
+
+      - name: Build vtquery
+        working-directory: vtquery
+        run: npm install
+
+      - name: Test vtquery
+        working-directory: vtquery
+        run: npm test
