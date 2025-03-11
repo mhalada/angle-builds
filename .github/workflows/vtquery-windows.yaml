@@ -1,4 +1,4 @@
-name: vtquery Linux Build
+name: vtquery Windows Build
 
 on:
   workflow_dispatch:
@@ -19,8 +19,8 @@ jobs:
       - name: Checkout vtquery
         uses: actions/checkout@v4
         with:
-            repository: 'mapbox/vtquery'
-            path: vtquery
+          repository: 'mapbox/vtquery'
+          path: vtquery
 
       - name: Setup dependencies
         working-directory: vtquery

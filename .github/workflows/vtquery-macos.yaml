@@ -1,11 +1,17 @@
-name: vtquery Linux Build
+name: vtquery MacOS Build
 
 on:
   workflow_dispatch:
 
 jobs:
   build:
-    runs-on: ubuntu-20.04
+    runs-on: ${{ matrix.target-cpu == 'arm64' && 'macos-14' || 'macos-13' }}
+
+    strategy:
+      fail-fast: false
+      matrix:
+        target-cpu: [x64, arm64]
+        target-os: [macos]
 
     steps:
       - name: Setup Node 16
@@ -22,7 +28,7 @@ jobs:
       - name: Build vtquery
         working-directory: vtquery
         run: npm install
-
+    
       - name: Test vtquery
         working-directory: vtquery
         run: npm test
