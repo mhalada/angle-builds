@@ -73,6 +73,7 @@ jobs:
         run: |
           copy vtquery-patches\package.json vtquery\package.json
           copy vtquery-patches\binding.gyp vtquery\binding.gyp
+          copy vtquery-patches\cheap_ruler.hpp vtquery\mason_packages\mapbox\cheap_ruler.hpp
 
       - name: Build vtquery
         working-directory: vtquery
