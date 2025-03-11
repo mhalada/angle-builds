@@ -54,7 +54,7 @@ jobs:
         if: ${{ matrix.target-cpu == 'arm64' }}
         run: |
           chmod +x ./vtquery-patches/build-vtquery-docker.sh
-          docker run --platform linux/arm64 --rm -v $(pwd):/data -w /data ubuntu:20.04 ./vtquery-patches/build-vtquery-docker.sh
+          docker run --platform linux/arm64 --rm -v $(pwd):/data -w /data ubuntu:22.04 ./vtquery-patches/build-vtquery-docker.sh
 
       - name: Artifact Preparation
         working-directory: vtquery
