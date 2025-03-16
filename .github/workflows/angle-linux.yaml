@@ -2,12 +2,6 @@ name: ANGLE Linux Build
 
 on:
   workflow_dispatch:
-    inputs:
-      branch:
-        description: Chromium Branch Number to Build
-        type: string
-        required: true
-        default: '6367'
 
 jobs:
   build:
@@ -36,49 +30,46 @@ jobs:
           docker-images: true
           swap-storage: true
 
-      - name: Download Depot Tools
-        run: git clone https://chromium.googlesource.com/chromium/tools/depot_tools.git
-      - name: Prepend Depot Tools to PATH
-        working-directory: depot_tools
-        run: echo "$(pwd)" >> $GITHUB_PATH
+      - name: Checkout gl-native-node
+        uses: actions/checkout@v4
+        with:
+            repository: 'maptiler/gl-native-node'
+            token: ${{ secrets.GH_PAT }}
+            path: gl-native-node
+            ref: CL-2818_server-builds
 
-      - name: Create ANGLE Directory
-        run: mkdir angle
-      - name: Fetch ANGLE
-        working-directory: angle
-        run: fetch angle
-      - name: Checkout ANGLE Branch
-        if: ${{ github.event_name == 'workflow_dispatch' && inputs.branch != 'main' }}
-        working-directory: angle
-        run: git checkout origin/chromium/${{ inputs.branch }}
-      - name: Sync ANGLE
-        working-directory: angle
-        run: gclient sync
-      - name: Install Linux dependencies
-        if: ${{ matrix.target-cpu == 'arm64' }}
-        working-directory: angle
-        run: |
-          ./build/install-build-deps.sh
-          ./build/linux/sysroot_scripts/install-sysroot.py --arch=arm64
-      - name: Configure ANGLE
+      - name: Checkout MapLibre Native
+        uses: actions/checkout@v4
+        with:
+            repository: 'maptiler/maplibre-native'
+            token: ${{ secrets.GH_PAT }}
+            ref: 'CL-2994_fix-debug-build'
+            path: gl-native-node/maplibre-native
+            submodules: 'recursive'
+
+      - name: Build ANGLE
         env:
           ANGLE_TARGET_CPU: ${{ matrix.target-cpu }}
           ANGLE_TARGET_OS: ${{ matrix.target-os }}
-        working-directory: angle
-        run: gn gen out/Release --args="target_cpu=\"$ANGLE_TARGET_CPU\" target_os=\"$ANGLE_TARGET_OS\" is_debug=false is_component_build=false"
+        working-directory: gl-native-node
+        run: |
+          sed -i 's|gn gen out/Release --args="is_debug=false is_component_build=false"|gn gen out/Release --args="target_cpu=\"$ANGLE_TARGET_CPU\" target_os=\"$ANGLE_TARGET_OS\" is_debug=false is_component_build=false"|' build-angle.sh
+          ./build-angle.sh
 
       - name: Build
         working-directory: angle
         run: autoninja -C out/Release
         # cp -a angle/out/Release/. output/
+
       - name: Artifact Preparation
         run: |
           mkdir output
-          cp angle/out/Release/libEGL.so output/libEGL.so
-          cp angle/out/Release/libGLESv2.so output/libGLESv2.so
-          cp angle/out/Release/libvk_swiftshader.so output/libvk_swiftshader.so
-          cp angle/out/Release/libvulkan.so.1 output/libvulkan.so.1
-          cp angle/out/Release/vk_swiftshader_icd.json output/vk_swiftshader_icd.json
+          cp gl-native-node/out/Release/libEGL.so output/libEGL.so
+          cp gl-native-node/out/Release/libGLESv2.so output/libGLESv2.so
+          cp gl-native-node/out/Release/libvk_swiftshader.so output/libvk_swiftshader.so
+          cp gl-native-node/out/Release/libvulkan.so.1 output/libvulkan.so.1
+          cp gl-native-node/out/Release/vk_swiftshader_icd.json output/vk_swiftshader_icd.json
+
       - name: Upload Artifacts
         uses: actions/upload-artifact@v4
         with:
