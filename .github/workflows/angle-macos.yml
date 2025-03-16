@@ -2,15 +2,6 @@ name: ANGLE MacOS Build
 
 on:
   workflow_dispatch:
-    inputs:
-      branch:
-        description: Chromium Branch Number to Build
-        type: string
-        required: true
-        default: '6367'
-
-env:
-  ANGLE_BUILDER_OUTPUT_FOLDER: ./angle-builder-output
 
 jobs:
   build:
@@ -32,58 +23,41 @@ jobs:
           ./clean_macos_runner.sh
         shell: bash
 
-      - name: Download Depot Tools
-        run: git clone https://chromium.googlesource.com/chromium/tools/depot_tools.git
-      - name: Prepend Depot Tools to PATH
-        working-directory: depot_tools
-        run: echo "$(pwd)" >> $GITHUB_PATH
+      - name: Checkout gl-native-node
+        uses: actions/checkout@v4
+        with:
+            repository: 'maptiler/gl-native-node'
+            token: ${{ secrets.GH_PAT }}
+            path: gl-native-node
+            ref: CL-2818_server-builds
 
-      - name: Fetch ANGLE
-        run: git clone https://github.com/google/angle.git angle
-      - name: Checkout ANGLE Branch
-        if: ${{ github.event_name == 'workflow_dispatch' && inputs.branch != 'main' }}
-        working-directory: angle
-        run: git checkout origin/chromium/${{ inputs.branch }}
-      - name: Bootstrap ANGLE
-        working-directory: angle
-        run: python scripts/bootstrap.py
-      - name: Sync ANGLE
-        working-directory: angle
-        run: gclient sync
-      - name: Configure ANGLE
+      - name: Checkout MapLibre Native
+        uses: actions/checkout@v4
+        with:
+            repository: 'maptiler/maplibre-native'
+            token: ${{ secrets.GH_PAT }}
+            ref: 'CL-2994_fix-debug-build'
+            path: gl-native-node/maplibre-native
+            submodules: 'recursive'
+
+      - name: Build ANGLE
         env:
           ANGLE_TARGET_CPU: ${{ matrix.target-cpu }}
-          ANGLE_TARGET_OS: mac
-        working-directory: angle
-        run: gn gen out/Release --args="target_cpu=\"$ANGLE_TARGET_CPU\" target_os=\"$ANGLE_TARGET_OS\" is_debug=false is_component_build=false"
+          ANGLE_TARGET_OS: ${{ matrix.target-os }}
+        working-directory: gl-native-node
+        run: |
+          # ./build/linux/sysroot_scripts/install-sysroot.py --arch=arm64
+          sed -i '' 's|gn gen out/Release --args="is_debug=false is_component_build=false"|gn gen out/Release --args="target_cpu=\\"$ANGLE_TARGET_CPU\\" target_os=\\"$ANGLE_TARGET_OS\\" is_debug=false is_component_build=false"|' build-angle.sh
+          ./build-angle.sh
 
-      # - name: Checkout angle-builder
-      #   uses: actions/checkout@v4
-      #   with:
-      #       repository: 'kivy/angle-builder'
-      #       ref: 'chromium-6367_rev1'
-
-      # - name: Setup Python
-      #   uses: actions/setup-python@v5
-
-      # - name: Install angle-builder
-      #   run: pip install .
-
-      # - name: Build artifacts for ${{ matrix.target-os }}-${{ matrix.target-cpu }}
-      #   run: angle-builder ${{ matrix.target-os }}-${{ matrix.target-cpu }} --branch chromium/${{ inputs.branch }} --artifact-output-folder $ANGLE_BUILDER_OUTPUT_FOLDER
-
-      - name: Build
-        working-directory: angle
-        run: autoninja -C out/Release
       - name: Artifact Preparation
         run: |
           mkdir output
-          ls -R angle/out/Release
-          cp angle/out/Release/libEGL.dylib output/libEGL.dylib
-          cp angle/out/Release/libGLESv2.dylib output/libGLESv2.dylib
-          cp angle/out/Release/libvk_swiftshader.dylib output/libvk_swiftshader.dylib
-          # cp angle/out/Release/libvulkan.dylib output/libvulkan.dylib
-          cp angle/out/Release/vk_swiftshader_icd.json output/vk_swiftshader_icd.json
+          cp gl-native-node/dist/libEGL.dylib output/libEGL.dylib
+          cp gl-native-node/dist/libGLESv2.dylib output/libGLESv2.dylib
+          cp gl-native-node/dist/libvk_swiftshader.dylib output/libvk_swiftshader.dylib
+          cp gl-native-node/dist/vk_swiftshader_icd.json output/vk_swiftshader_icd.json
+
       - name: Upload Artifacts
         uses: actions/upload-artifact@v4
         with:
