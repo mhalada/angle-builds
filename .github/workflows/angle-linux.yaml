@@ -53,13 +53,8 @@ jobs:
           ANGLE_TARGET_OS: ${{ matrix.target-os }}
         working-directory: gl-native-node
         run: |
-          sed -i 's|gn gen out/Release --args="is_debug=false is_component_build=false"|gn gen out/Release --args="target_cpu=\"$ANGLE_TARGET_CPU\" target_os=\"$ANGLE_TARGET_OS\" is_debug=false is_component_build=false"|' build-angle.sh
+          sed -i 's|gn gen out/Release --args="is_debug=false is_component_build=false"|gn gen out/Release --args="target_cpu=\"$ANGLE_TARGET_CPU\" target_os=\\"$ANGLE_TARGET_OS\\" is_debug=false is_component_build=false"|' build-angle.sh
           ./build-angle.sh
-
-      - name: Build
-        working-directory: angle
-        run: autoninja -C out/Release
-        # cp -a angle/out/Release/. output/
 
       - name: Artifact Preparation
         run: |
