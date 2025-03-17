@@ -45,6 +45,7 @@ jobs:
       - name: Build gl-native-node
         working-directory: gl-native-node
         run: |
+          mkdir -p maplibre-native/dist
           cp angle/libEGL.dylib ./maplibre-native/dist/.
           cp angle/libGLESv2.dylib ./maplibre-native/dist/.
           # x64
