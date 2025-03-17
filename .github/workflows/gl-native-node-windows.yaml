@@ -54,7 +54,7 @@ jobs:
       - name: Build gl-native-node
         working-directory: gl-native-node
         run: |
-          (Get-Content build.bat) -replace 'cmake . -B build -G Ninja ^', 'cmake . -B build -G Ninja -DCMAKE_MAKE_PROGRAM=ninja ^' | Set-Content build.bat
+          choco install ninja
           .\build.bat -onprem
 
       - name: Artifact Preparation
