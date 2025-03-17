@@ -10,7 +10,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        target-cpu: [x64, arm64]
+        target-cpu: [x64]
         target-os: [linux]
 
     steps:
@@ -81,3 +81,62 @@ jobs:
           name: gl-native-node-${{ matrix.target-cpu }}-${{ matrix.target-os }}
           path: output/
           retention-days: 1
+
+  test:
+    runs-on: ubuntu-20.04
+    needs: build
+
+    strategy:
+      fail-fast: false
+      matrix:
+        target-cpu: [x64]
+        target-os: [linux]
+
+    steps:
+      - name: Checkout gl-native-node
+        uses: actions/checkout@v4
+        with:
+            repository: 'maptiler/gl-native-node'
+            token: ${{ secrets.GH_PAT }}
+            path: gl-native-node
+            ref: CL-2818_server-builds
+
+      - name: Download gl-native-node binaries
+        uses: actions/download-artifact@v4
+        with:
+          name: gl-native-node-${{ matrix.target-cpu }}-${{ matrix.target-os }}
+          path: gl-native-node/dist
+
+      - name: Download ANGLE dependency
+        working-directory: gl-native-node
+        run: |
+          mkdir dist
+          wget https://github.com/mhalada/angle-builds/releases/download/v0.0.1/angle-${{ matrix.target-cpu }}-linux.zip -O angle.zip
+          unzip angle.zip -d angle
+          cp angle/libEGL.so dist/.
+          cp angle/libGLESv2.so dist/.
+          cp angle/libvk_swiftshader.so dist/.
+          cp angle/libvulkan.so.1 dist/.
+          cp angle/vk_swiftshader_icd.json dist/.
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+        with:
+          platforms: linux/amd64,linux/arm64
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+        with:
+          install: true
+          platforms: linux/amd64,linux/arm64
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20.18.2
+
+      - name: Test
+        working-directory: gl-native-node
+        run: |
+          export ANGLE_DEFAULT_PLATFORM=swiftshader
+          npm ci --preserve-symlinks
+          PLATFORM=ubuntu npm test

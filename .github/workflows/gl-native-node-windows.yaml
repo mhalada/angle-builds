@@ -34,23 +34,6 @@ jobs:
             path: gl-native-node/maplibre-native
             submodules: 'recursive'
 
-      # - name: Download ANGLE dependency
-      #   run: |
-      #     curl -L -o angle.zip https://github.com/mhalada/angle-builds/releases/download/v0.0.1/angle-${{ matrix.target-cpu }}-win.zip
-      #     mkdir angle
-      #     tar -xf angle.zip -C angle
-      #     copy angle\libEGL.dll dependencies\lib\libEGL.dll
-      #     copy angle\libGLESv2.dll dependencies\lib\libGLESv2.dll
-      #     copy angle\libEGL.dll gl-native-node\dist\libEGL.dll
-      #     copy angle\libGLESv2.dll gl-native-node\dist\libGLESv2.dll
-
-      #     copy angle\libEGL.dll.lib dependencies\lib\libEGL.lib
-      #     copy angle\libGLESv2.dll.lib dependencies\lib\libGLESv2.lib
-      #     copy angle\libEGL.dll.lib gl-native-node\dist\libEGL.lib
-      #     copy angle\libGLESv2.dll.lib gl-native-node\dist\libGLESv2.lib
-      #     robocopy angle\include dependencies\include /e
-      #     if ($lastexitcode -lt 8) { $global:LASTEXITCODE = $null }
-
       - name: Set up msvc dev cmd (Windows)
         uses: ilammy/msvc-dev-cmd@v1
 
