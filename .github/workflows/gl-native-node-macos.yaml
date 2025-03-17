@@ -63,8 +63,8 @@ jobs:
           mkdir -p maplibre-native/dist
           cp angle/libEGL.dylib ./maplibre-native/dist/.
           cp angle/libGLESv2.dylib ./maplibre-native/dist/.
-          brew install cmake ccache ninja pkg-config glfw3 libuv llvm jpeg
-          export CPPFLAGS="-I/opt/homebrew/include"
+          brew install cmake ccache ninja pkg-config glfw3 libuv llvm jpeg jpeg-turbo
+          brew list jpeg
           chmod +x ./build.sh
           ./build.sh --onprem
 
@@ -81,3 +81,51 @@ jobs:
           name: gl-native-node-${{ matrix.target-cpu }}-${{ matrix.target-os }}
           path: output/
           retention-days: 1
+
+  test:
+    runs-on: ${{ matrix.target-cpu == 'arm64' && 'macos-14' || 'macos-13' }}
+    needs: build
+
+    strategy:
+      fail-fast: false
+      matrix:
+        target-cpu: [x64, arm64]
+        target-os: [macos]
+
+    steps:
+      - name: Checkout gl-native-node
+        uses: actions/checkout@v4
+        with:
+            repository: 'maptiler/gl-native-node'
+            token: ${{ secrets.GH_PAT }}
+            path: gl-native-node
+            ref: CL-2818_server-builds
+
+      - name: Download ANGLE dependency
+        working-directory: gl-native-node
+        run: |
+          mkdir dist
+          wget https://github.com/mhalada/angle-builds/releases/download/v0.0.1/angle-${{ matrix.target-cpu }}-macos.zip -O angle.zip
+          unzip angle.zip -d angle
+          cp angle/libEGL.dylib dist/.
+          cp angle/libGLESv2.dylib dist/.
+          cp angle/libvk_swiftshader.dylib dist/.
+          cp angle/vk_swiftshader_icd.json dist/.
+
+      - name: Download gl-native-node binaries
+        uses: actions/download-artifact@v4
+        with:
+          name: gl-native-node-${{ matrix.target-cpu }}-${{ matrix.target-os }}
+          path: gl-native-node/dist
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20.18.2
+  
+      - name: Test
+        working-directory: gl-native-node
+        run: |
+          export ANGLE_DEFAULT_PLATFORM=swiftshader
+          npm ci --preserve-symlinks
+          PLATFORM=ubuntu npm test
