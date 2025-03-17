@@ -53,7 +53,9 @@ jobs:
 
       - name: Build gl-native-node
         working-directory: gl-native-node
-        run: .\build.bat -onprem
+        run: |
+          (Get-Content file.txt) -replace 'cmake . -B build -G Ninja ^', 'cmake . -B build -G Ninja -DCMAKE_MAKE_PROGRAM=ninja ^' | Set-Content build.bat
+          .\build.bat -onprem
 
       - name: Artifact Preparation
         working-directory: gl-native-node
