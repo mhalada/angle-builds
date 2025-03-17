@@ -11,17 +11,17 @@ jobs:
       fail-fast: false
       matrix:
         target-cpu: [x64, arm64]
-        target-os: [macos]
+        target-os: [mac]
 
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
-      # - name: Free Disk Space
-      #   run: |
-      #     chmod +x ./clean_macos_runner.sh
-      #     ./clean_macos_runner.sh
-      #   shell: bash
+      - name: Free Disk Space
+        run: |
+          chmod +x ./clean_macos_runner.sh
+          ./clean_macos_runner.sh
+        shell: bash
 
       - name: Checkout gl-native-node
         uses: actions/checkout@v4
@@ -47,7 +47,8 @@ jobs:
         working-directory: gl-native-node
         run: |
           sed -i '' 's|sudo apt-get update||' build-angle.sh
-          sed -i '' 's|sudo apt-get install -y git curl wget python3 xz-utils lsb-release|brew install git curl wget python3|' build-angle.sh
+          # brew install git curl wget python3
+          sed -i '' 's|sudo apt-get install -y git curl wget python3 xz-utils lsb-release||' build-angle.sh
           sed -i '' 's|gn gen out/Release --args="is_debug=false is_component_build=false"|gn gen out/Release --args="target_cpu=\\"$ANGLE_TARGET_CPU\\" target_os=\\"$ANGLE_TARGET_OS\\" is_debug=false is_component_build=false"|' build-angle.sh
           ./build-angle.sh
 
