@@ -47,13 +47,12 @@ jobs:
         working-directory: gl-native-node
         run: |
           mkdir -p maplibre-native/dist
-          mkdir -p /opt/homebrew/opt/llvm/
           cp angle/libEGL.dylib ./maplibre-native/dist/.
           cp angle/libGLESv2.dylib ./maplibre-native/dist/.
           brew install cmake ccache ninja pkg-config glfw3 libuv llvm jpeg
           # x64 - /usr/local/opt/llvm/bin
           # arm64 - /opt/homebrew/opt/llvm/bin
-          sudo ln -s /usr/local/opt/llvm/bin /opt/homebrew/opt/llvm/bin
+          sed -i '' 's|/opt/homebrew/opt/llvm/bin/|/usr/local/opt/llvm/bin/|' build.sh
           chmod +x ./build.sh
           ./build.sh --onprem
 
