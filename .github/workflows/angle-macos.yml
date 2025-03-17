@@ -46,7 +46,8 @@ jobs:
           ANGLE_TARGET_OS: ${{ matrix.target-os }}
         working-directory: gl-native-node
         run: |
-          # ./build/linux/sysroot_scripts/install-sysroot.py --arch=arm64
+          sed -i '' 's|sudo apt-get update||' build-angle.sh
+          sed -i '' 's|sudo apt-get install -y git curl wget python3 xz-utils lsb-release|brew install git curl wget python3|' build-angle.sh
           sed -i '' 's|gn gen out/Release --args="is_debug=false is_component_build=false"|gn gen out/Release --args="target_cpu=\\"$ANGLE_TARGET_CPU\\" target_os=\\"$ANGLE_TARGET_OS\\" is_debug=false is_component_build=false"|' build-angle.sh
           ./build-angle.sh
 
