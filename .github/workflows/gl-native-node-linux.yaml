@@ -53,6 +53,11 @@ jobs:
           install: true
           platforms: linux/amd64,linux/arm64
 
+      - name: Update Dockefile
+        working-directory: gl-native-node
+        if: ${{ matrix.target-cpu == 'arm64' }}
+        run: sed -i 's|x86_64|aarch64|' build-ubuntu20.04.Dockerfile
+
       - name: Build gl-native-node
         working-directory: gl-native-node
         env:
@@ -67,7 +72,9 @@ jobs:
         working-directory: gl-native-node
         run: |
           mkdir ../output
-          cp dist/mbgl-server.node ../output/mbgl-linux-${{ matrix.target-cpu }}.node
+          cp dist/mbgl-node108.node ../output/mbgl=node108-linux-${{ matrix.target-cpu }}.node
+          cp dist/mbgl-node115.node ../output/mbgl=node115-linux-${{ matrix.target-cpu }}.node
+          cp dist/mbgl-node127.node ../output/mbgl=node127-linux-${{ matrix.target-cpu }}.node
       - name: Upload Artifacts
         uses: actions/upload-artifact@v4
         with:
