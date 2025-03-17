@@ -17,11 +17,11 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Free Disk Space
-        run: |
-          chmod +x ./clean_macos_runner.sh
-          ./clean_macos_runner.sh
-        shell: bash
+      # - name: Free Disk Space
+      #   run: |
+      #     chmod +x ./clean_macos_runner.sh
+      #     ./clean_macos_runner.sh
+      #   shell: bash
 
       - name: Checkout gl-native-node
         uses: actions/checkout@v4
