@@ -49,7 +49,8 @@ jobs:
           cp angle/libEGL.dylib ./maplibre-native/dist/.
           cp angle/libGLESv2.dylib ./maplibre-native/dist/.
           brew install cmake ccache ninja pkg-config glfw3 libuv llvm jpeg
-          xcode-select --install
+          brew link --force --overwrite llvm
+          ls -l /usr/local/opt/llvm/bin
           chmod +x ./build.sh
           ./build.sh --onprem
 
