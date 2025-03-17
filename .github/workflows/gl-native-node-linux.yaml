@@ -101,12 +101,6 @@ jobs:
             path: gl-native-node
             ref: CL-2818_server-builds
 
-      - name: Download gl-native-node binaries
-        uses: actions/download-artifact@v4
-        with:
-          name: gl-native-node-${{ matrix.target-cpu }}-${{ matrix.target-os }}
-          path: gl-native-node/dist
-
       - name: Download ANGLE dependency
         working-directory: gl-native-node
         run: |
@@ -118,6 +112,12 @@ jobs:
           cp angle/libvk_swiftshader.so dist/.
           cp angle/libvulkan.so.1 dist/.
           cp angle/vk_swiftshader_icd.json dist/.
+
+      - name: Download gl-native-node binaries
+        uses: actions/download-artifact@v4
+        with:
+          name: gl-native-node-${{ matrix.target-cpu }}-${{ matrix.target-os }}
+          path: gl-native-node/dist
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
