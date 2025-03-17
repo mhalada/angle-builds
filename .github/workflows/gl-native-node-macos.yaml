@@ -68,6 +68,7 @@ jobs:
           brew list jpeg-turbo
           export LDFLAGS="-L/opt/homebrew/Cellar/jpeg/9f/lib"
           export CPPFLAGS="-I/opt/homebrew/Cellar/jpeg/9f/include"
+          export PKG_CONFIG_PATH="/opt/homebrew/opt/jpeg/lib/pkgconfig"
           chmod +x ./build.sh
           ./build.sh --onprem
 
