@@ -53,13 +53,13 @@ jobs:
 
       - name: Build gl-native-node
         working-directory: gl-native-node
-        run: ./build.bat -onprem
+        run: .\build.bat -onprem
 
       - name: Artifact Preparation
         working-directory: gl-native-node
         run: |
-          mkdir ../output
-          copy mbgl-server.node ../output/mbgl-win32-${{ matrix.target-cpu }}.node
+          mkdir ..\output
+          copy mbgl-server.node ..\output\mbgl-win32-${{ matrix.target-cpu }}.node
       - name: Upload Artifacts
         uses: actions/upload-artifact@v4
         with:
