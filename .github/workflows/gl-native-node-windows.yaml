@@ -5,7 +5,7 @@ on:
 
 jobs:
   build:
-    runs-on: windows-2019
+    runs-on: windows-2022
 
     strategy:
       fail-fast: false
@@ -50,6 +50,9 @@ jobs:
       #     copy angle\libGLESv2.dll.lib gl-native-node\dist\libGLESv2.lib
       #     robocopy angle\include dependencies\include /e
       #     if ($lastexitcode -lt 8) { $global:LASTEXITCODE = $null }
+
+      - name: Set up msvc dev cmd (Windows)
+        uses: ilammy/msvc-dev-cmd@v1
 
       - name: Build gl-native-node
         working-directory: gl-native-node
