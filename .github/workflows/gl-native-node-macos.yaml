@@ -27,7 +27,7 @@ jobs:
         with:
             repository: 'maptiler/maplibre-native'
             token: ${{ secrets.GH_PAT }}
-            ref: 'CL-2994_fix-debug-build'
+            ref: 'CL-2962_macos'
             path: gl-native-node/maplibre-native
             submodules: 'recursive'
 
