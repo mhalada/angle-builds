@@ -59,6 +59,7 @@ jobs:
 
   test:
     runs-on: windows-2022
+    needs: build
 
     strategy:
       fail-fast: false

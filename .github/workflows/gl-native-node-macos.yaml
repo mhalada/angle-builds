@@ -48,7 +48,7 @@ jobs:
           mkdir -p maplibre-native/dist
           cp angle/libEGL.dylib ./maplibre-native/dist/.
           cp angle/libGLESv2.dylib ./maplibre-native/dist/.
-          brew install cmake ccache ninja pkg-config glfw3 libuv llvm
+          brew install cmake ccache ninja pkg-config glfw3 libuv llvm jpeg
           export PATH="/usr/local/opt/llvm/bin:$PATH"
           chmod +x ./build.sh
           ./build.sh --onprem
