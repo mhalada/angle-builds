@@ -59,6 +59,8 @@ jobs:
           DOCKER_PLATFORM: ${{ matrix.target-cpu == 'arm64' && 'arm64' || 'amd64' }}
         run: |
           chmod +x ./build-in-docker.sh
+          sed -i 's|docker build -t mbgl-$DOCKERIMAGE . -f $DOCKERIMAGE.Dockerfile|docker build --load --platform linux/$DOCKER_PLATFORM -t mbgl-$DOCKERIMAGE . -f $DOCKERIMAGE.Dockerfile|' build-in-docker.sh
+          sed -i 's|docker run --rm -v "$(pwd):/workspace" mbgl-$DOCKERIMAGE ./build.sh $ONPREM|docker run --platform linux/$DOCKER_PLATFORM --rm -v "$(pwd):/workspace" mbgl-$DOCKERIMAGE ./build.sh $ONPREM|' build-in-docker.sh
           ./build-in-docker.sh server
 
       - name: Artifact Preparation
