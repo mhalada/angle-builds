@@ -47,9 +47,9 @@ jobs:
         working-directory: gl-native-node
         run: |
           mkdir ..\output
-          copy mbgl-node108.node ..\output\mbgl-node108-win32-${{ matrix.target-cpu }}.node
-          copy mbgl-node115.node ..\output\mbgl-node115-win32-${{ matrix.target-cpu }}.node
-          copy mbgl-node127.node ..\output\mbgl-node127-win32-${{ matrix.target-cpu }}.node
+          copy dist\mbgl-node108.node ..\output\mbgl-node108.node
+          copy dist\mbgl-node115.node ..\output\mbgl-node115.node
+          copy dist\mbgl-node127.node ..\output\mbgl-node127.node
       - name: Upload Artifacts
         uses: actions/upload-artifact@v4
         with:
