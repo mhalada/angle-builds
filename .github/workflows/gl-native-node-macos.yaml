@@ -63,8 +63,11 @@ jobs:
           mkdir -p maplibre-native/dist
           cp angle/libEGL.dylib ./maplibre-native/dist/.
           cp angle/libGLESv2.dylib ./maplibre-native/dist/.
-          brew install cmake ccache ninja pkg-config glfw3 libuv llvm jpeg jpeg-turbo
+          brew install cmake ccache ninja pkg-config glfw3 libuv llvm jpeg
           brew list jpeg
+          brew list jpeg-turbo
+          export LDFLAGS="-L/opt/homebrew/Cellar/jpeg/9f/lib"
+          export CPPFLAGS="-I/opt/homebrew/Cellar/jpeg/9f/include"
           chmod +x ./build.sh
           ./build.sh --onprem
 
