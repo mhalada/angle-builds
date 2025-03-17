@@ -47,10 +47,47 @@ jobs:
         working-directory: gl-native-node
         run: |
           mkdir ..\output
-          copy mbgl-server.node ..\output\mbgl-win32-${{ matrix.target-cpu }}.node
+          copy mbgl-node108.node ..\output\mbgl-node108-win32-${{ matrix.target-cpu }}.node
+          copy mbgl-node115.node ..\output\mbgl-node115-win32-${{ matrix.target-cpu }}.node
+          copy mbgl-node127.node ..\output\mbgl-node127-win32-${{ matrix.target-cpu }}.node
       - name: Upload Artifacts
         uses: actions/upload-artifact@v4
         with:
           name: gl-native-node-${{ matrix.target-cpu }}-${{ matrix.target-os }}
           path: output/
           retention-days: 1
+
+  test:
+    runs-on: windows-2022
+
+    strategy:
+      fail-fast: false
+      matrix:
+        target-cpu: [x64]
+        target-os: [win]
+
+    steps:
+      - name: Checkout gl-native-node
+        uses: actions/checkout@v4
+        with:
+            repository: 'maptiler/gl-native-node'
+            token: ${{ secrets.GH_PAT }}
+            path: gl-native-node
+            ref: CL-2818_server-builds
+
+      - name: Download gl-native-node binaries
+        uses: actions/download-artifact@v4
+        with:
+          name: gl-native-node-${{ matrix.target-cpu }}-${{ matrix.target-os }}
+          path: gl-native-node\dist
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20.18.2
+
+      - name: Test
+        working-directory: gl-native-node
+        run: |
+          npm ci --preserve-symlinks
+          $PLATFORM="windows"; npm test
