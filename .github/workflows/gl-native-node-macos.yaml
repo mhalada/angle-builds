@@ -17,39 +17,17 @@ jobs:
       - name: Checkout gl-native-node
         uses: actions/checkout@v4
         with:
-            repository: 'maptiler/gl-native-node'
-            token: ${{ secrets.GH_PAT }}
-            path: gl-native-node
-            ref: CL-2818_server-builds
-
-      - name: Checkout MapLibre Native
-        uses: actions/checkout@v4
-        with:
-            repository: 'maptiler/maplibre-native'
-            token: ${{ secrets.GH_PAT }}
-            ref: 'CL-2962_macos'
-            path: gl-native-node/maplibre-native
-            submodules: 'recursive'
-
-      - name: Download ANGLE dependency
-        working-directory: gl-native-node
-        run: |
-          mkdir dist
-          wget https://github.com/mhalada/angle-builds/releases/download/v0.0.1/angle-${{ matrix.target-cpu }}-macos.zip -O angle.zip
-          unzip angle.zip -d angle
-          cp angle/libEGL.dylib dist/.
-          cp angle/libGLESv2.dylib dist/.
-          cp angle/libvk_swiftshader.dylib dist/.
-          cp angle/vk_swiftshader_icd.json dist/.
+          repository: 'maptiler/gl-native-node'
+          token: ${{ secrets.GH_PAT }}
+          path: gl-native-node
+          ref: CL-2376_maplibre-gl-native
+          submodules: 'recursive'
 
       - name: Build x64
         if: ${{ matrix.target-cpu == 'x64' }}
         working-directory: gl-native-node
         run: |
-          mkdir -p maplibre-native/dist
-          cp angle/libEGL.dylib ./maplibre-native/dist/.
-          cp angle/libGLESv2.dylib ./maplibre-native/dist/.
-          brew install cmake ccache ninja pkg-config glfw3 libuv llvm jpeg
+          brew install cmake ccache ninja pkg-config glfw3 libuv llvm
           # x64 - /usr/local/opt/llvm/bin
           # arm64 - /opt/homebrew/opt/llvm/bin
           sed -i '' 's|/opt/homebrew/opt/llvm/bin/|/usr/local/opt/llvm/bin/|' build.sh
@@ -60,25 +38,16 @@ jobs:
         if: ${{ matrix.target-cpu == 'arm64' }}
         working-directory: gl-native-node
         run: |
-          mkdir -p maplibre-native/dist
-          cp angle/libEGL.dylib ./maplibre-native/dist/.
-          cp angle/libGLESv2.dylib ./maplibre-native/dist/.
-          brew install cmake ccache ninja pkg-config glfw3 libuv llvm jpeg
-          brew list jpeg
-          brew list jpeg-turbo
-          export LDFLAGS="-L/opt/homebrew/Cellar/jpeg/9f/lib"
-          export CPPFLAGS="-I/opt/homebrew/Cellar/jpeg/9f/include"
-          export PKG_CONFIG_PATH="/opt/homebrew/Cellar/jpeg/9f/lib/pkgconfig"
+          brew install cmake ccache ninja pkg-config glfw3 libuv llvm
           chmod +x ./build.sh
           ./build.sh --onprem
 
       - name: Artifact Preparation
         working-directory: gl-native-node
         run: |
+          ls dist
           mkdir ../output
-          cp dist/mbgl-node108.node ../output/mbgl-node108.node
-          cp dist/mbgl-node115.node ../output/mbgl-node115.node
-          cp dist/mbgl-node127.node ../output/mbgl-node127.node
+          cp dist/mbgl-node*.node ../output/
       - name: Upload Artifacts
         uses: actions/upload-artifact@v4
         with:
@@ -103,18 +72,8 @@ jobs:
             repository: 'maptiler/gl-native-node'
             token: ${{ secrets.GH_PAT }}
             path: gl-native-node
-            ref: CL-2818_server-builds
-
-      - name: Download ANGLE dependency
-        working-directory: gl-native-node
-        run: |
-          mkdir dist
-          wget https://github.com/mhalada/angle-builds/releases/download/v0.0.1/angle-${{ matrix.target-cpu }}-macos.zip -O angle.zip
-          unzip angle.zip -d angle
-          cp angle/libEGL.dylib dist/.
-          cp angle/libGLESv2.dylib dist/.
-          cp angle/libvk_swiftshader.dylib dist/.
-          cp angle/vk_swiftshader_icd.json dist/.
+            ref: CL-2376_maplibre-gl-native
+            submodules: 'recursive'
 
       - name: Download gl-native-node binaries
         uses: actions/download-artifact@v4
