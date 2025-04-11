@@ -1,3 +1,4 @@
+# https://github.com/Automattic/node-canvas/pull/2354
 name: node-canvas MacOS ARM64 Build
 
 on:
@@ -21,7 +22,7 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
-          node-version: 18.5.0
+          node-version: 20.18.2
 
       - name: Build
         working-directory: node-canvas
@@ -38,19 +39,12 @@ jobs:
           . prebuild/macOS/bundle.sh
           rm -rf build/Release/obj.target
 
-      # https://github.com/Automattic/node-canvas/pull/2354
-      # - name: Sign the executable
-      #   uses: indygreg/apple-code-sign-action@v1
-      #   with:
-      #     input_path: node-canvas/build/Release/node.canvas
       - name: Sign the executable
         working-directory: node-canvas
         run: |
-          wget https://github.com/indygreg/apple-platform-rs/releases/download/apple-codesign%2F0.28.0/apple-codesign-0.28.0-macos-universal.tar.gz
-          tar -xvf apple-codesign-0.28.0-macos-universal.tar.gz
           for file in ./build/Release/*
           do
-            ./apple-codesign-0.28.0-macos-universal/rcodesign sign "$file"
+            codesign --sign - "$file"
           done
 
       - name: Test binary
