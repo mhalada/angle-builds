@@ -43,7 +43,7 @@ jobs:
         working-directory: node-canvas
         run: |
           for file in ./build/Release/*; do
-            if ! codesign --verify --quiet "$file"; then
+            if ! codesign --verify "$file" &> /dev/null; then
               echo "Signing $file"
               codesign --sign - "$file"
             else
