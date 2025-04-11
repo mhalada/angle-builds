@@ -42,9 +42,13 @@ jobs:
       - name: Sign the executable
         working-directory: node-canvas
         run: |
-          for file in ./build/Release/*
-          do
-            codesign --sign - "$file"
+          for file in ./build/Release/*; do
+            if ! codesign --verify --quiet "$file"; then
+              echo "Signing $file"
+              codesign --sign - "$file"
+            else
+              echo "Skipping $file (already signed)"
+            fi
           done
 
       - name: Test binary
