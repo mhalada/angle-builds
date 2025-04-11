@@ -22,7 +22,7 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
-          node-version: 18.5.0
+          node-version: 20.18.2
 
       - name: Build
         working-directory: node-canvas
@@ -54,7 +54,8 @@ jobs:
       - name: Test binary
         working-directory: node-canvas
         run: |
-          brew uninstall --ignore-dependencies --force cairo pango librsvg giflib harfbuzz
+          brew list --versions pango
+          # brew uninstall --ignore-dependencies --force cairo pango librsvg giflib harfbuzz
           npm test
 
       - name: Upload Artifacts
