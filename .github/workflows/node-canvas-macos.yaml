@@ -43,11 +43,11 @@ jobs:
         working-directory: node-canvas
         run: |
           for file in ./build/Release/*; do
-            if codesign -d "$file" &> /dev/null; then
-              echo "Skipping $file (already signed)"
+            if ! codesign --verify "$file" &> /dev/null; then
+              echo "Re-signing $file (invalid or unsigned)"
+              codesign --force --sign - "$file"
             else
-              echo "Signing $file"
-              codesign --sign - "$file"
+              echo "Skipping $file (already signed and valid)"
             fi
           done
 
