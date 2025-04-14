@@ -24,6 +24,11 @@ jobs:
         with:
           node-version: 20.18.2
 
+      - name: Install node-canvas from source
+        run: |
+          npm install canvas@2.11.2
+          ls ./node_modules/canvas/build/Release
+
       - name: Build
         working-directory: node-canvas
         run: |
