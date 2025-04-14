@@ -64,7 +64,7 @@ jobs:
       - name: Test binary
         working-directory: node-canvas
         run: |
-          brew list --versions pango
+          # brew list --versions pango
           # brew uninstall --ignore-dependencies --force cairo pango librsvg giflib harfbuzz
           npm test
 
