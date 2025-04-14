@@ -26,24 +26,27 @@ jobs:
 
       - name: Install node-canvas from source
         run: |
-          brew install pkg-config cairo pango libpng jpeg giflib librsvg pixman python-setuptools
+          brew install pkg-config cairo pango libpng jpeg giflib librsvg pixman
           npm install canvas@2.11.2
           ls ./node_modules/canvas/build/Release
-
-      - name: Build
-        working-directory: node-canvas
-        run: |
-          npm install -g node-gyp
+          mkdir -p ./node-canvas/build/Release
+          cp ./node_modules/canvas/build/Release/canvas.node ./node-canvas/build/Release/
           npm install --ignore-scripts
-          sed -i '' 's/pip3 install --user macpack/pip install --break-system-packages --user macpack/g' prebuild/macOS/preinstall.sh
-          . prebuild/macOS/preinstall.sh
-          pkg-config --variable pc_path pkg-config
-          mkdir -p /opt/homebrew/lib/pkgconfig
-          cp ../node-canvas-patches/giflib.pc /opt/homebrew/lib/pkgconfig/
-          cp ../node-canvas-patches/binding.gyp binding.gyp
-          node-gyp rebuild -j 2
-          . prebuild/macOS/bundle.sh
-          rm -rf build/Release/obj.target
+
+      # - name: Build
+      #   working-directory: node-canvas
+      #   run: |
+      #     npm install -g node-gyp
+      #     npm install --ignore-scripts
+      #     sed -i '' 's/pip3 install --user macpack/pip install --break-system-packages --user macpack/g' prebuild/macOS/preinstall.sh
+      #     . prebuild/macOS/preinstall.sh
+      #     pkg-config --variable pc_path pkg-config
+      #     mkdir -p /opt/homebrew/lib/pkgconfig
+      #     cp ../node-canvas-patches/giflib.pc /opt/homebrew/lib/pkgconfig/
+      #     cp ../node-canvas-patches/binding.gyp binding.gyp
+      #     node-gyp rebuild -j 2
+      #     . prebuild/macOS/bundle.sh
+      #     rm -rf build/Release/obj.target
 
       - name: Sign the executable
         working-directory: node-canvas
