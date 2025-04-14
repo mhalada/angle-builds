@@ -31,6 +31,7 @@ jobs:
           ls ./node_modules/canvas/build/Release
           mkdir -p ./node-canvas/build/Release
           cp ./node_modules/canvas/build/Release/canvas.node ./node-canvas/build/Release/
+          cd ./node-canvas
           npm install --ignore-scripts
 
       # - name: Build
