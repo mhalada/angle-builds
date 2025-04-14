@@ -16,7 +16,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           repository: 'Automattic/node-canvas'
-          ref: 'v2.11.2'
+          ref: 'v3.1.0'
           path: node-canvas
 
       - name: Setup Node
@@ -26,8 +26,8 @@ jobs:
 
       - name: Install node-canvas from source
         run: |
-          brew install pkg-config cairo pango libpng jpeg giflib librsvg pixman
-          npm install canvas@2.11.2
+          brew install pkg-config cairo pango libpng jpeg giflib librsvg pixman python-setuptools
+          npm install canvas@3.1.0
           ls ./node_modules/canvas/build/Release
           mkdir -p ./node-canvas/build/Release
           cp ./node_modules/canvas/build/Release/canvas.node ./node-canvas/build/Release/
