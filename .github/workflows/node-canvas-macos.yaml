@@ -26,6 +26,7 @@ jobs:
 
       - name: Install node-canvas from source
         run: |
+          brew install pkg-config cairo pango libpng jpeg giflib librsvg pixman python-setuptools
           npm install canvas@2.11.2
           ls ./node_modules/canvas/build/Release
 
