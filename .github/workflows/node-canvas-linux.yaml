@@ -31,7 +31,7 @@ jobs:
       - name: Build
         working-directory: node-canvas
         run: |
-          mkdir -p prebuild
+          mkdir -p ./prebuild/Linux/
           cp ../node-canvas-patches/build-linux.sh ./prebuild/Linux/
           cp ../node-canvas-patches/bundle.sh ./prebuild/Linux/
           chmod +x ./prebuild/Linux/build-linux.sh
