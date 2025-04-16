@@ -12,6 +12,12 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+            username: mhalada1
+            password: ${{ secrets.DOCKERHUB_TOKEN }}
+
       - name: Checkout node-canvas
         uses: actions/checkout@v4
         with:
@@ -29,21 +35,27 @@ jobs:
           install: true
           platforms: linux/arm64
 
-      - name: Build
+      - name: Build & Push Docker image
         working-directory: node-canvas
         run: |
-          mkdir -p ./prebuild/Linux/
-          cp ../node-canvas-patches/build-linux.sh ./prebuild/Linux/
-          cp ../node-canvas-patches/bundle.sh ./prebuild/Linux/
-          chmod +x ./prebuild/Linux/build-linux.sh
-          chmod +x ./prebuild/Linux/bundle.sh
-          docker build --load --platform linux/arm64 -t node-canvas:build . -f ../node-canvas-patches/Dockerfile
-          mkdir build
-          docker run --platform linux/arm64 --rm -v ./build:/data/output node-canvas:build ./prebuild/Linux/build-linux.sh
+          docker build --load --platform linux/arm64 -t mhalada1/server:canvas-prebuilt . -f ../node-canvas-patches/Dockerfile
+          docker push mhalada1/server:canvas-prebuilt
 
-      - name: Upload Artifacts
-        uses: actions/upload-artifact@v4
-        with:
-          name: node-canvas-arm64-linux
-          path: node-canvas/build/Release
-          retention-days: 1
+      # - name: Build
+      #   working-directory: node-canvas
+      #   run: |
+      #     mkdir -p ./prebuild/Linux/
+      #     cp ../node-canvas-patches/build-linux.sh ./prebuild/Linux/
+      #     cp ../node-canvas-patches/bundle.sh ./prebuild/Linux/
+      #     chmod +x ./prebuild/Linux/build-linux.sh
+      #     chmod +x ./prebuild/Linux/bundle.sh
+      #     docker build --load --platform linux/arm64 -t node-canvas:build . -f ../node-canvas-patches/Dockerfile
+      #     mkdir build
+      #     docker run --platform linux/arm64 --rm -v ./build:/data/output node-canvas:build ./prebuild/Linux/build-linux.sh
+
+      # - name: Upload Artifacts
+      #   uses: actions/upload-artifact@v4
+      #   with:
+      #     name: node-canvas-arm64-linux
+      #     path: node-canvas/build/Release
+      #     retention-days: 1
