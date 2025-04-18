@@ -42,6 +42,7 @@ jobs:
       #     docker push mhalada1/server:canvas-prebuilt
 
       - name: Build
+        continue-on-error: true
         working-directory: node-canvas
         run: |
           mkdir -p ./prebuild/Linux/
