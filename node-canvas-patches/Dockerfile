@@ -42,17 +42,3 @@ RUN ldconfig
 RUN bash -c 'curl -LO https://download.gnome.org/sources/libcroco/0.6/libcroco-0.6.13.tar.xz; tar -xvf libcroco-0.6.13.tar.xz; cd libcroco-0.6.13; ./configure; make -j8; make install'
 RUN bash -c 'cd; . .cargo/env; curl -LO https://download.gnome.org/sources/librsvg/2.52/librsvg-2.52.8.tar.xz; tar -xvf librsvg-2.52.8.tar.xz; cd librsvg-2.52.8; ./configure --enable-introspection=no; make -j8; make install'
 RUN ldconfig
-
-#COPY . /data
-#WORKDIR /data
-
-# Set up Node.js
-#RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash -
-#RUN apt-get -y install nodejs=20.18.2-1nodesource1
-
-#RUN npm install -g node-gyp
-#RUN npm install --ignore-scripts
-#RUN cp prebuild/Linux/binding.gyp binding.gyp
-#RUN . prebuild/Linux/bundle.sh
-
-#CMD ["./build.sh"]
