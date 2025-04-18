@@ -1,4 +1,4 @@
-FROM mhalada1:canvas-prebuilt
+FROM mhalada1/server:canvas-prebuilt
 
 COPY . /data
 WORKDIR /data
