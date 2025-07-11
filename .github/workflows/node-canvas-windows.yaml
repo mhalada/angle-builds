@@ -1,0 +1,83 @@
+# https://github.com/Automattic/node-canvas/blob/prebuilds/.github/workflows/prebuild.yaml
+name: node-canvas Windows ARM64 Build
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: windows-11-arm
+    env:
+      CANVAS_VERSION_TO_BUILD: 'v3.1.1'
+
+    steps:
+      - uses: msys2/setup-msys2@v2
+        id: msys2
+        with:
+          msystem: CLANGARM64
+          update: true
+          release: true
+          path-type: inherit
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 21
+          architecture: arm64
+
+      - name: Checkout node-canvas
+        uses: actions/checkout@v4
+        with:
+          repository: 'Automattic/node-canvas'
+          ref: 'v3.1.1'
+          fetch-depth: 0
+
+      - name: Build
+        run: |
+          echo "MSYS2 LOCATION: ${{steps.msys2.outputs.msys2-location}}"
+          git checkout ${{ env.CANVAS_VERSION_TO_BUILD }}
+          git checkout $env:GITHUB_SHA -- prebuild/
+          npm install -g node-gyp
+          npm prefix -g | % {npm config set node_gyp "$_\node_modules\node-gyp\bin\node-gyp.js"}
+          npm install --ignore-scripts
+          msys2 -c ". prebuild/Windows/preinstall.sh"
+          msys2 -c "cp prebuild/Windows/binding.gyp binding.gyp"
+          npm install --build-from-source
+
+      - name: Upload Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: node-canvas-arm64-win32
+          path: node-canvas/build/Release
+          retention-days: 1
+
+      - name: Install Depends
+        run: |
+          Invoke-WebRequest "http://www.dependencywalker.com/depends22_x64.zip" -OutFile depends22_x64.zip
+          7z e depends22_x64.zip
+
+      - name: Bundle pt 2
+        shell: msys2 {0}
+        run: |
+          # removes object files and debug
+          . prebuild/Windows/bundle.sh
+          ./depends.exe -c -oc depends.csv build\\Release\\canvas.node || true
+          [ -f depends.csv ] || { echo "error invoking depends.exe"; exit 1; }
+
+          copies=$(comm -12 \
+            <(cat depends.csv | cut -d ',' -f2 | sed 's/"//g' | tr '[:upper:]' '[:lower:]' | sort) \
+            <(find /ucrt64/bin -name '*.dll' -printf "%f\n" | tr '[:upper:]' '[:lower:]' | sort) \
+          )
+
+          for dll in $copies; do
+            cp /ucrt64/bin/$dll build/Release
+          done;
+          
+      - name: Test binary
+        # By not running in msys2, this doesn't have access to the msys2 libs
+        run: npm test
+
+      - name: Make asset
+        id: make_bundle
+        # I can't figure out why this isn't an env var already. It shows up with `env`.
+        run: msys2 -c "CANVAS_VERSION_TO_BUILD=${{ env.CANVAS_VERSION_TO_BUILD}} . prebuild/tarball.sh"

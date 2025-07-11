@@ -1,4 +1,6 @@
 # https://github.com/TryGhost/node-sqlite3/blob/v5.1.7/.github/workflows/ci.yml
+# https://github.com/TryGhost/node-sqlite3/issues/1829
+# https://github.com/TryGhost/node-sqlite3/issues/1647
 name: node-sqlite3 Windows ARM64 Build
 
 on:
@@ -7,8 +9,6 @@ on:
 jobs:
   build:
     runs-on: windows-11-arm
-    strategy:
-      fail-fast: false
 
     steps:
       - name: Checkout node-sqlite3
