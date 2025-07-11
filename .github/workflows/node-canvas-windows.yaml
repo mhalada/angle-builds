@@ -45,6 +45,8 @@ jobs:
           npm install --ignore-scripts
           msys2 -c ". ../node-canvas-patches/windows/preinstall.sh"
           msys2 -c "cp ../node-canvas-patches/windows/binding.gyp binding.gyp"
+          dir C:\a\_temp\msys64\
+          dir C:\a\_temp\msys64\clangarm64\
           npm install --build-from-source
 
       - name: Upload Artifacts
