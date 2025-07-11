@@ -1,0 +1,52 @@
+# https://github.com/TryGhost/node-sqlite3/blob/v5.1.7/.github/workflows/ci.yml
+name: node-sqlite3 Windows ARM64 Build
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: windows-11-arm
+    strategy:
+      fail-fast: false
+
+    steps:
+      - name: Checkout node-sqlite3
+        uses: actions/checkout@v4
+        with:
+          repository: 'TryGhost/node-sqlite3'
+          ref: 'v5.1.7'
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+          architecture: arm64
+
+      - name: Install Yarn
+        run: npm install -g yarn
+
+      - name: Install dependencies
+        run: yarn install --ignore-scripts
+
+      - name: Check Node compatibility
+        run: node tools/semver-check.js
+
+      - name: Add env vars
+        shell: bash
+        run: |
+          echo "V=1" >> $GITHUB_ENV
+          echo "TARGET=arm64" >> $GITHUB_ENV
+
+      - name: Build binaries
+        run: yarn prebuild -a ${{ env.TARGET }}
+
+      - name: Run tests
+        run: yarn test
+
+      - name: Upload Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: node-sqlite3-arm64-win32
+          path: prebuilds/*
+          retention-days: 1
