@@ -25,23 +25,26 @@ jobs:
           node-version: 21
           architecture: arm64
 
+      - name: Checkout
+        uses: actions/checkout@v4
+
       - name: Checkout node-canvas
         uses: actions/checkout@v4
         with:
           repository: 'Automattic/node-canvas'
           ref: 'v3.1.1'
           fetch-depth: 0
+          path: node-canvas
 
       - name: Build
+        working-directory: node-canvas
         run: |
           echo "MSYS2 LOCATION: ${{steps.msys2.outputs.msys2-location}}"
-          git checkout ${{ env.CANVAS_VERSION_TO_BUILD }}
-          git checkout $env:GITHUB_SHA -- prebuild/
           npm install -g node-gyp
           npm prefix -g | % {npm config set node_gyp "$_\node_modules\node-gyp\bin\node-gyp.js"}
           npm install --ignore-scripts
-          msys2 -c ". prebuild/Windows/preinstall.sh"
-          msys2 -c "cp prebuild/Windows/binding.gyp binding.gyp"
+          msys2 -c ". ../node-canvas-patches/windows/preinstall.sh"
+          msys2 -c "cp ../node-canvas-patches/windows/binding.gyp binding.gyp"
           npm install --build-from-source
 
       - name: Upload Artifacts
