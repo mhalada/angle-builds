@@ -39,16 +39,15 @@ jobs:
       - name: Install dependencies
         working-directory: node-canvas
         run: |
-          vcpkg install cairo:arm64-windows
-          vcpkg install libpng:arm64-windows
-          vcpkg install libjpeg-turbo:arm64-windows
-          vcpkg install pango:arm64-windows
-          vcpkg install pangocairo:arm64-windows
-          vcpkg install glib:arm64-windows
-          vcpkg install giflib:arm64-windows
-          vcpkg install freetype:arm64-windows
-          vcpkg install librsvg:arm64-windows
-          vcpkg install libgsf:arm64-windows
+          vcpkg install cairo:arm64-windows ^
+            freetype:arm64-windows ^
+            giflib:arm64-windows ^
+            glib:arm64-windows ^
+            libjpeg-turbo:arm64-windows ^
+            libpng:arm64-windows ^
+            librsvg:arm64-windows ^
+            pango:arm64-windows
+          Get-ChildItem -Path C:\vcpkg\ -Recurse
 
       - name: Build
         working-directory: node-canvas
