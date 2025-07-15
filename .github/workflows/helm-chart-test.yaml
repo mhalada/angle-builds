@@ -32,9 +32,9 @@ jobs:
         helm repo add maptiler https://labs.maptiler.com/maptiler-server-kubernetes/
         helm install maptiler-server-app maptiler/maptiler-server
 
-    - name: Wait for deployment to be ready
+    - name: Wait for pod to be ready
       run: |
-        kubectl wait --for=condition=available --timeout=600s deployment/maptiler-server-app
+        kubectl wait --for=condition=Ready pod -l app.kubernetes.io/name=maptiler-server --timeout=60s
 
     - name: Validate Deployment
       run: |
