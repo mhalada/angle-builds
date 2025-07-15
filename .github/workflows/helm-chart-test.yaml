@@ -41,8 +41,8 @@ jobs:
         kubectl get all
         kubectl rollout status deployment/maptiler-server-app
 
-    - name: Dump pod logs on failure
-      if: failure()
+    - name: Display pod logs
+      if: always()
       run: |
         kubectl get pods --all-namespaces -o wide
         kubectl describe pods
