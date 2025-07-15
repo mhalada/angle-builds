@@ -30,7 +30,11 @@ jobs:
     - name: Install Helm Chart
       run: |
         helm repo add maptiler https://labs.maptiler.com/maptiler-server-kubernetes/
-        helm install maptiler-server-app maptiler/maptiler-server --wait
+        helm install maptiler-server-app maptiler/maptiler-server
+
+    - name: Wait for deployment to be ready
+      run: |
+        kubectl wait --for=condition=available --timeout=600s deployment/maptiler-server-app
 
     - name: Validate Deployment
       run: |
@@ -42,4 +46,4 @@ jobs:
       run: |
         kubectl get pods --all-namespaces -o wide
         kubectl describe pods
-        kubectl logs -l app=maptiler-server-app || true
+        kubectl logs -l app.kubernetes.io/name=maptiler-server
