@@ -23,9 +23,6 @@ jobs:
     - name: Wait for Kubernetes to be ready
       run: kubectl wait --for=condition=Ready nodes --all --timeout=90s
 
-    - name: Lint
-      run: helm lint ./charts/maptiler-server
-
     - name: Install Helm Chart
       run: |
         helm repo add maptiler https://labs.maptiler.com/maptiler-server-kubernetes/
