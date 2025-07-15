@@ -8,11 +8,6 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
-      with:
-          repository: 'maptiler/maptiler-server-kubernetes'
-
     - name: Set up Docker
       uses: docker/setup-buildx-action@v3
 
@@ -26,21 +21,18 @@ jobs:
       uses: azure/setup-helm@v4
 
     - name: Wait for Kubernetes to be ready
-      run: |
-        kubectl wait --for=condition=Ready nodes --all --timeout=90s
+      run: kubectl wait --for=condition=Ready nodes --all --timeout=90s
 
     - name: Lint
       run: helm lint ./charts/maptiler-server
 
     - name: Install Helm Chart
       run: |
-        # helm repo add maptiler https://labs.maptiler.com/maptiler-server-kubernetes/
-        # helm install maptiler-server-app maptiler/maptiler-server
-        helm install maptiler-server-app ./charts/maptiler-server
+        helm repo add maptiler https://labs.maptiler.com/maptiler-server-kubernetes/
+        helm install maptiler-server-app maptiler/maptiler-server
 
     - name: Wait for pod to be ready
-      run: |
-        kubectl wait --for=condition=Ready pod -l app.kubernetes.io/name=maptiler-server --timeout=60s
+      run: kubectl wait --for=condition=Ready pod -l app.kubernetes.io/name=maptiler-server --timeout=90s
 
     - name: Validate Deployment
       run: |
