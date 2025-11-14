@@ -43,14 +43,14 @@ jobs:
           # vcpkg install fribidi:arm64-windows
           # Get-Content "C:\vcpkg\buildtrees\fribidi\config-arm64-windows-dbg-meson-log.txt.log" -ErrorAction SilentlyContinue
           # Get-Content "C:\vcpkg\buildtrees\fribidi\config-arm64-windows-dbg-out.log" -ErrorAction SilentlyContinue
-          vcpkg install cairo:arm64-windows `
-            freetype:arm64-windows `
-            giflib:arm64-windows `
-            glib:arm64-windows `
-            libjpeg-turbo:arm64-windows `
-            libpng:arm64-windows `
-            librsvg:arm64-windows `
-            pango:arm64-windows
+          # vcpkg install cairo:arm64-windows `
+          #   freetype:arm64-windows `
+          #   giflib:arm64-windows `
+          #   glib:arm64-windows `
+          #   libjpeg-turbo:arm64-windows `
+          #   libpng:arm64-windows `
+          #   librsvg:arm64-windows `
+          #   pango:arm64-windows
           # Get-ChildItem -Path C:\vcpkg\ -Recurse
 
       - name: Build
@@ -60,8 +60,8 @@ jobs:
           npm install -g node-gyp
           npm prefix -g | % {npm config set node_gyp "$_\node_modules\node-gyp\bin\node-gyp.js"}
           npm install --ignore-scripts
-          msys2 -c ". ../node-canvas-patches/windows/preinstall.sh"
-          msys2 -c "cp ../node-canvas-patches/windows/binding.gyp binding.gyp"
+          msys2 -c ". ../node-canvas-patches/preinstall.sh"
+          msys2 -c "cp ../node-canvas-patches/binding.gyp binding.gyp"
           dir C:\a\_temp\msys64\
           dir C:\a\_temp\msys64\clangarm64\
           npm install --build-from-source
