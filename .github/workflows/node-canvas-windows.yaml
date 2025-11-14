@@ -40,9 +40,6 @@ jobs:
         working-directory: node-canvas
         continue-on-error: true
         run: |
-          # vcpkg install fribidi:arm64-windows
-          # Get-Content "C:\vcpkg\buildtrees\fribidi\config-arm64-windows-dbg-meson-log.txt.log" -ErrorAction SilentlyContinue
-          # Get-Content "C:\vcpkg\buildtrees\fribidi\config-arm64-windows-dbg-out.log" -ErrorAction SilentlyContinue
           vcpkg install pango:arm64-windows --head
           vcpkg install librsvg:arm64-windows --head
           vcpkg install glib:arm64-windows --head
@@ -51,7 +48,7 @@ jobs:
             giflib:arm64-windows `
             libjpeg-turbo:arm64-windows `
             libpng:arm64-windows
-          # Get-ChildItem -Path C:\vcpkg\ -Recurse
+          Get-ChildItem -Path C:\vcpkg\ -Recurse
 
       - name: Build
         working-directory: node-canvas
