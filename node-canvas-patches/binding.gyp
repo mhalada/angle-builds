@@ -32,7 +32,7 @@
         'NODE_ADDON_API_ENABLE_MAYBE'
       ],
       'libraries': [
-        'C:/vcpkg/installed/arm64-windows/lib/cairo.lib',
+        # 'C:/vcpkg/installed/arm64-windows/lib/cairo.lib',
         # 'C:/vcpkg/installed/arm64-windows/lib/pangocairo.lib',
         # 'C:/vcpkg/installed/arm64-windows/lib/libpng16.lib',
         # 'C:/vcpkg/installed/arm64-windows/lib/gobject-2.0.lib',
