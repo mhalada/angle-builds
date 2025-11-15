@@ -40,8 +40,10 @@ jobs:
         working-directory: node-canvas
         continue-on-error: true
         run: |
+          # https://github.com/microsoft/vcpkg/issues/47984
           mkdir C:\vcpkg\downloads
           curl -o C:\vcpkg\downloads\GNOME-pango-1.56.1.tar.gz "https://dev.maptiler.download/server/dependency/node_canvas/pango-1.56.1.tar.gz"
+          curl -o C:\vcpkg\downloads\GNOME-gdk-pixbuf-2.42.12.tar.gz "https://dev.maptiler.download/server/dependency/node_canvas/gdk-pixbuf-2.42.12.tar.gz"
           vcpkg install pango:arm64-windows
           vcpkg install librsvg:arm64-windows --head
           vcpkg install glib:arm64-windows
