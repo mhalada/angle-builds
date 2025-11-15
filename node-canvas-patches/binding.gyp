@@ -42,7 +42,7 @@
         'C:/vcpkg/installed/arm64-windows/lib/turbojpeg.lib',
         'C:/vcpkg/installed/arm64-windows/lib/gif.lib',
         'C:/vcpkg/installed/arm64-windows/lib/pango-1.0.lib',
-        'C:/vcpkg/packages/librsvg_arm64-windows/lib/librsvg-2-2.lib',
+        'C:/vcpkg/packages/librsvg_arm64-windows/lib/rsvg-2.lib',
         # 'C:/a/_temp/msys64/clangarm64/lib/libcairo-2.lib',
         # 'C:/a/_temp/msys64/clangarm64/lib/libpng16-16.lib',
         # 'C:/a/_temp/msys64/clangarm64/lib/libjpeg-8.lib',
