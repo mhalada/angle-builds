@@ -33,7 +33,7 @@
       ],
       'libraries': [
         'C:/vcpkg/installed/arm64-windows/lib/cairo.lib',
-        'C:/vcpkg/installed/arm64-windows/lib/pangocairo.lib',
+        'C:/vcpkg/installed/arm64-windows/lib/pangocairo-1.0.lib',
         'C:/vcpkg/installed/arm64-windows/lib/libpng16.lib',
         'C:/vcpkg/installed/arm64-windows/lib/gobject-2.0.lib',
         'C:/vcpkg/installed/arm64-windows/lib/glib-2.0.lib',
