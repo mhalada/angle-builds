@@ -82,15 +82,41 @@ jobs:
           $base = "C:\vcpkg\installed\arm64-windows\bin"
 
           $files = @(
+              "brotlicommon.dll",
+              "brotlidec.dll",
+              "bz2.dll",
               "cairo-2.dll",
+              "cairo-gobject-2.dll",
+              "ffi-8.dll",
+              "fontconfig-1.dll",
               "freetype.dll",
+              "fribidi-0.dll",
+              "gdk_pixbuf-2.0-0.dll",
               "gif.dll",
+              "gio-2.0-0.dll",
               "glib-2.0-0.dll",
+              "gmodule-2.0-0.dll",
               "gobject-2.0-0.dll",
+              "harfbuzz.dll",
+              "iconv-2.dll",
+              "intl-8.dll",
               "jpeg62.dll",
+              "libexpat.dll",
+              "liblzma.dll",
               "libpng16.dll",
+              "libxml2.dll",
               "pango-1.0-0.dll",
-              "pangocairo-1.0-0.dll"
+              "pangocairo-1.0-0.dll",
+              "pangoft2-1.0-0.dll",
+              "pangowin32-1.0-0.dll",
+              "pcre2-16.dll",
+              "pcre2-32.dll",
+              "pcre2-8.dll",
+              "pixman-1-0.dll",
+              "rsvg-2.dll",
+              "tiff.dll",
+              "turbojpeg.dll",
+              "zlib1.dll"
           )
 
           foreach ($f in $files) {
