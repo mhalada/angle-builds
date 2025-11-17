@@ -50,7 +50,7 @@ jobs:
           vcpkg install cairo:arm64-windows `
             freetype:arm64-windows `
             giflib:arm64-windows `
-            libjpeg-turbo:arm64-windows `
+            libjpeg-turbo[core,jpeg8]:arm64-windows `
             libpng:arm64-windows
           Get-ChildItem -Path C:\vcpkg\ -Recurse
 
