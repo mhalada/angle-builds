@@ -101,14 +101,10 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: node-canvas-arm64-win32
-          path: node-canvas/build
+          path: node-canvas/build/Release
           retention-days: 1
 
       - name: Test binary
         # By not running in msys2, this doesn't have access to the msys2 libs
+        working-directory: node-canvas
         run: npm test
-
-      - name: Make asset
-        id: make_bundle
-        # I can't figure out why this isn't an env var already. It shows up with `env`.
-        run: msys2 -c "CANVAS_VERSION_TO_BUILD=${{ env.CANVAS_VERSION_TO_BUILD}} . prebuild/tarball.sh"
