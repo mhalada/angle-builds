@@ -69,35 +69,41 @@ jobs:
           dir C:\a\_temp\msys64\clangarm64\lib\
           npm install --build-from-source
 
+      - name: Bundle
+        working-directory: node-canvas
+        run: |
+          rm build/Release/obj -Recurse -Force
+          rm build/Release/canvas.exp -Force
+          rm build/Release/canvas.iobj -Force
+          rm build/Release/canvas.ipdb -Force
+          rm build/Release/canvas.lib -Force
+          rm build/Release/canvas.pdb -Force
+
+          $base = "C:\vcpkg\installed\arm64-windows\bin"
+
+          $files = @(
+              "cairo-2.dll",
+              "freetype.dll",
+              "gif.dll",
+              "glib-2.0-0.dll",
+              "gobject-2.0-0.dll",
+              "jpeg62.dll",
+              "libpng16.dll",
+              "pango-1.0-0.dll",
+              "pangocairo-1.0-0.dll"
+          )
+
+          foreach ($f in $files) {
+              Copy-Item "$base\$f" "build\Release"
+          }
+
       - name: Upload Artifacts
         uses: actions/upload-artifact@v4
         with:
           name: node-canvas-arm64-win32
-          path: node-canvas/build/Release
+          path: node-canvas/build
           retention-days: 1
 
-      - name: Install Depends
-        run: |
-          Invoke-WebRequest "http://www.dependencywalker.com/depends22_x64.zip" -OutFile depends22_x64.zip
-          7z e depends22_x64.zip
-
-      - name: Bundle pt 2
-        shell: msys2 {0}
-        run: |
-          # removes object files and debug
-          . prebuild/Windows/bundle.sh
-          ./depends.exe -c -oc depends.csv build\\Release\\canvas.node || true
-          [ -f depends.csv ] || { echo "error invoking depends.exe"; exit 1; }
-
-          copies=$(comm -12 \
-            <(cat depends.csv | cut -d ',' -f2 | sed 's/"//g' | tr '[:upper:]' '[:lower:]' | sort) \
-            <(find /ucrt64/bin -name '*.dll' -printf "%f\n" | tr '[:upper:]' '[:lower:]' | sort) \
-          )
-
-          for dll in $copies; do
-            cp /ucrt64/bin/$dll build/Release
-          done;
-          
       - name: Test binary
         # By not running in msys2, this doesn't have access to the msys2 libs
         run: npm test
