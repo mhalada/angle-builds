@@ -100,7 +100,7 @@ jobs:
               "harfbuzz.dll",
               "iconv-2.dll",
               "intl-8.dll",
-              "jpeg62.dll",
+              "jpeg8.dll",
               "libexpat.dll",
               "liblzma.dll",
               "libpng16.dll",
