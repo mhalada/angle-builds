@@ -24,7 +24,8 @@
       'defines': [
         'HAVE_GIF',
         'HAVE_JPEG',
-        'HAVE_RSVG',
+        # https://github.com/microsoft/vcpkg/issues/24402
+        # 'HAVE_RSVG',
         'HAVE_BOOLEAN', # or jmorecfg.h tries to define it
         '_USE_MATH_DEFINES', # for M_PI
         'NOMINMAX', # allow std::min/max to work
@@ -42,7 +43,10 @@
         'C:/vcpkg/installed/arm64-windows/lib/turbojpeg.lib',
         'C:/vcpkg/installed/arm64-windows/lib/gif.lib',
         'C:/vcpkg/installed/arm64-windows/lib/pango-1.0.lib',
-        'C:/vcpkg/packages/librsvg_arm64-windows/lib/rsvg-2.lib',
+
+        # https://github.com/microsoft/vcpkg/issues/24402
+        # 'C:/vcpkg/installed/arm64-windows/lib/rsvg-2.lib',
+
         # 'C:/a/_temp/msys64/clangarm64/lib/libcairo-2.lib',
         # 'C:/a/_temp/msys64/clangarm64/lib/libpng16-16.lib',
         # 'C:/a/_temp/msys64/clangarm64/lib/libjpeg-8.lib',
