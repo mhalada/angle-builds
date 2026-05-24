@@ -1,8 +1,14 @@
 #include <algorithm>
-#include <codecvt>
-#include <locale>
 #include <memory>
 #include <vector>
+
+#if defined(__GNUC__) || defined(__clang__)
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
+#endif
+
+#include <codecvt>
+#include <locale>
 
 #include <emscripten/bind.h>
 #include <emscripten/val.h>
@@ -151,10 +157,8 @@ emscripten::val inject_into_macho(const emscripten::val& executable,
     }
   }
 
-  // Construct a new Uint8Array in JS
-  LIEF::MachO::Builder builder(*fat_binary);
-  builder.build();
-  const std::vector<uint8_t>& output = builder.get_build();
+  // Reconstruct a new Fat binary object and return its content as bytes
+  std::vector<uint8_t> output = fat_binary->raw();
 
   emscripten::val view{
       emscripten::typed_memory_view(output.size(), output.data())};
@@ -307,3 +311,7 @@ EMSCRIPTEN_BINDINGS(postject) {
   emscripten::function("injectIntoMachO", &inject_into_macho);
   emscripten::function("injectIntoPE", &inject_into_pe);
 }
+
+#if defined(__GNUC__) || defined(__clang__)
+#pragma GCC diagnostic pop
+#endif
