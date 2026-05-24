@@ -40,6 +40,8 @@ jobs:
       - name: Patch postject
         run: |
           cp postject-patches/CMakeLists.txt ./postject/CMakeLists.txt
+          cp postject-patches/postject.cpp ./postject/src/postject.cpp
+          cp postject-patches/Parser.hpp ./postject/vendor/lief/include/LIEF/ELF/Parser.hpp
 
       - name: Build
         working-directory: postject
