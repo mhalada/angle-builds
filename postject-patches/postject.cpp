@@ -49,54 +49,65 @@ emscripten::val inject_into_elf(const emscripten::val& executable,
   emscripten::val object = emscripten::val::object();
   object.set("data", emscripten::val::undefined());
 
-  std::unique_ptr<LIEF::ELF::Binary> binary =
-      LIEF::ELF::Parser::parse(vec_from_val(executable));
-
-  if (!binary) {
-    object.set("result", emscripten::val(InjectResult::kError));
-    return object;
-  }
-
-  LIEF::ELF::Note* existing_note = nullptr;
-
-  for (LIEF::ELF::Note& note : binary->notes()) {
-    if (note.name() == note_name) {
-      existing_note = &note;
+  try {
+    const size_t length = executable["length"].as<size_t>();
+    std::vector<uint8_t> executable_vec(length);
+    if (length > 0) {
+      emscripten::val::global("Uint8Array")
+          .new_(emscripten::typed_memory_view(length, executable_vec.data()))
+          .call<void>("set", executable);
     }
-  }
 
-  if (existing_note) {
-    if (!overwrite) {
-      object.set("result", emscripten::val(InjectResult::kAlreadyExists));
+    std::unique_ptr<LIEF::ELF::Binary> binary =
+        LIEF::ELF::Parser::parse(std::move(executable_vec));
+
+    if (!binary) {
+      object.set("result", emscripten::val(InjectResult::kError));
       return object;
-    } else {
-      binary->remove(*existing_note);
     }
-  }
 
-  LIEF::ELF::Note note(note_name,
-                       static_cast<uint32_t>(LIEF::ELF::NOTE_TYPES::NT_UNKNOWN),
-                       vec_from_val(data));
-  binary->add(std::move(note));
+    LIEF::ELF::Note* existing_note = nullptr;
 
-  // Construct a new Uint8Array in JS
-  LIEF::ELF::Builder builder(*binary);
-  builder.build();
-  
-  // Note: LIEF::ELF::Builder::build doesn't return ok_error_t but we can check if it produced anything
-  const std::vector<uint8_t>& output = builder.get_build();
-  if (output.empty()) {
+    for (LIEF::ELF::Note& note : binary->notes()) {
+      if (note.name() == note_name) {
+        existing_note = &note;
+      }
+    }
+
+    if (existing_note) {
+      if (!overwrite) {
+        object.set("result", emscripten::val(InjectResult::kAlreadyExists));
+        return object;
+      } else {
+        binary->remove(*existing_note);
+      }
+    }
+
+    LIEF::ELF::Note note(note_name,
+                         static_cast<uint32_t>(LIEF::ELF::NOTE_TYPES::NT_UNKNOWN),
+                         vec_from_val(data));
+    binary->add(std::move(note));
+
+    // Construct a new Uint8Array in JS
+    LIEF::ELF::Builder builder(*binary);
+    builder.build();
+    
+    const std::vector<uint8_t>& output = builder.get_build();
+    if (output.empty()) {
+      object.set("result", emscripten::val(InjectResult::kError));
+      return object;
+    }
+
+    emscripten::val view{
+        emscripten::typed_memory_view(output.size(), output.data())};
+    auto output_data = emscripten::val::global("Uint8Array").new_(output.size());
+    output_data.call<void>("set", view);
+
+    object.set("data", output_data);
+    object.set("result", emscripten::val(InjectResult::kSuccess));
+  } catch (const std::bad_alloc&) {
     object.set("result", emscripten::val(InjectResult::kError));
-    return object;
   }
-
-  emscripten::val view{
-      emscripten::typed_memory_view(output.size(), output.data())};
-  auto output_data = emscripten::val::global("Uint8Array").new_(output.size());
-  output_data.call<void>("set", view);
-
-  object.set("data", output_data);
-  object.set("result", emscripten::val(InjectResult::kSuccess));
 
   return object;
 }
