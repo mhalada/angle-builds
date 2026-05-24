@@ -77,12 +77,18 @@ emscripten::val inject_into_elf(const emscripten::val& executable,
   LIEF::ELF::Note note(note_name,
                        static_cast<uint32_t>(LIEF::ELF::NOTE_TYPES::NT_UNKNOWN),
                        vec_from_val(data));
-  binary->add(note);
+  binary->add(std::move(note));
 
   // Construct a new Uint8Array in JS
   LIEF::ELF::Builder builder(*binary);
   builder.build();
+  
+  // Note: LIEF::ELF::Builder::build doesn't return ok_error_t but we can check if it produced anything
   const std::vector<uint8_t>& output = builder.get_build();
+  if (output.empty()) {
+    object.set("result", emscripten::val(InjectResult::kError));
+    return object;
+  }
 
   emscripten::val view{
       emscripten::typed_memory_view(output.size(), output.data())};

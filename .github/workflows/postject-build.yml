@@ -41,7 +41,12 @@ jobs:
         run: |
           cp postject-patches/CMakeLists.txt ./postject/CMakeLists.txt
           cp postject-patches/postject.cpp ./postject/src/postject.cpp
+          cp postject-patches/Binary.hpp ./postject/vendor/lief/include/LIEF/ELF/Binary.hpp
+          cp postject-patches/Note.hpp ./postject/vendor/lief/include/LIEF/ELF/Note.hpp
           cp postject-patches/Parser.hpp ./postject/vendor/lief/include/LIEF/ELF/Parser.hpp
+          cp postject-patches/Binary.cpp ./postject/vendor/lief/src/ELF/Binary.cpp
+          cp postject-patches/ExeLayout.cpp ./postject/vendor/lief/src/ELF/ExeLayout.cpp
+          cp postject-patches/Note.cpp ./postject/vendor/lief/src/ELF/Note.cpp
 
       - name: Build
         working-directory: postject
