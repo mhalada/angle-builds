@@ -31,15 +31,7 @@ std::vector<uint8_t> vec_from_val(const emscripten::val& value) {
 }
 
 ExecutableFormat get_executable_format(const emscripten::val& executable) {
-  const size_t length = executable["length"].as<size_t>();
-  const size_t check_length = std::min(length, static_cast<size_t>(64));
-  std::vector<uint8_t> buffer(check_length);
-  if (check_length > 0) {
-    emscripten::val::global("Uint8Array")
-        .new_(emscripten::typed_memory_view(check_length, buffer.data()))
-        .call<void>("set", executable.call<emscripten::val>("subarray", 0,
-                                                            check_length));
-  }
+  std::vector<uint8_t> buffer = vec_from_val(executable);
 
   if (LIEF::ELF::is_elf(buffer)) {
     return ExecutableFormat::kELF;
