@@ -56,7 +56,6 @@ class LIEF_API Note : public Object {
   Note(const Note& copy);
 
   Note(Note&& other);
-  Note& operator=(Note&& other);
 
   virtual ~Note();
 

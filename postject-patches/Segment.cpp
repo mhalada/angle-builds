@@ -51,25 +51,6 @@ Segment::Segment(Segment&& other) :
   content_c_(std::move(other.content_c_))
 {}
 
-Segment& Segment::operator=(Segment&& other) {
-  if (this != &other) {
-    Object::operator=(std::move(other));
-    type_ = std::move(other.type_);
-    flags_ = std::move(other.flags_);
-    file_offset_ = std::move(other.file_offset_);
-    virtual_address_ = std::move(other.virtual_address_);
-    physical_address_ = std::move(other.physical_address_);
-    size_ = std::move(other.size_);
-    virtual_size_ = std::move(other.virtual_size_);
-    alignment_ = std::move(other.alignment_);
-    handler_size_ = std::move(other.handler_size_);
-    sections_ = std::move(other.sections_);
-    datahandler_ = std::move(other.datahandler_);
-    content_c_ = std::move(other.content_c_);
-  }
-  return *this;
-}
-
 Segment::~Segment() = default;
 
 Segment::Segment(const Segment& other) :

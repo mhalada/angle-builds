@@ -70,17 +70,6 @@ Note::Note(Note&& other) :
   details_(std::move(other.details_))
 {}
 
-Note& Note::operator=(Note&& other) {
-  Object::operator=(std::move(other));
-  binary_ = std::move(other.binary_);
-  name_ = std::move(other.name_);
-  type_ = std::move(other.type_);
-  description_ = std::move(other.description_);
-  is_core_ = std::move(other.is_core_);
-  details_ = std::move(other.details_);
-  return *this;
-}
-
 void Note::swap(Note& other) {
   std::swap(binary_,      other.binary_);
   std::swap(name_,        other.name_);

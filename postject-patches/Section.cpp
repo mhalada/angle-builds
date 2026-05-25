@@ -52,24 +52,6 @@ Section::Section(Section&& other) :
   content_c_(std::move(other.content_c_))
 {}
 
-Section& Section::operator=(Section&& other) {
-  if (this != &other) {
-    LIEF::Section::operator=(std::move(other));
-    type_ = std::move(other.type_);
-    flags_ = std::move(other.flags_);
-    original_size_ = std::move(other.original_size_);
-    link_ = std::move(other.link_);
-    info_ = std::move(other.info_);
-    address_align_ = std::move(other.address_align_);
-    entry_size_ = std::move(other.entry_size_);
-    segments_ = std::move(other.segments_);
-    is_frame_ = std::move(other.is_frame_);
-    datahandler_ = std::move(other.datahandler_);
-    content_c_ = std::move(other.content_c_);
-  }
-  return *this;
-}
-
 Section::~Section() = default;
 Section::Section() = default;
 
@@ -110,9 +92,9 @@ Section::Section(const std::string& name, ELF_SECTION_TYPES type) :
 Section::Section(const uint8_t *data, ELF_CLASS type)
 {
   if (type == ELF_CLASS::ELFCLASS32) {
-    *this = {*reinterpret_cast<const details::Elf32_Shdr*>(data)};
+    *this = Section(*reinterpret_cast<const details::Elf32_Shdr*>(data));
   } else if (type == ELF_CLASS::ELFCLASS64) {
-    *this = {*reinterpret_cast<const details::Elf64_Shdr*>(data)};
+    *this = Section(*reinterpret_cast<const details::Elf64_Shdr*>(data));
   }
 }
 

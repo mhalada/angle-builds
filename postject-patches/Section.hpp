@@ -71,7 +71,6 @@ class LIEF_API Section : public LIEF::Section {
   Section& operator=(Section other);
   Section(const Section& other);
 
-  Section& operator=(Section&& other);
   Section(Section&& other);
 
   void swap(Section& other);

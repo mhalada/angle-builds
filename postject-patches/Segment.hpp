@@ -69,7 +69,6 @@ class LIEF_API Segment : public Object {
   Segment& operator=(Segment other);
   Segment(const Segment& other);
 
-  Segment& operator=(Segment&&);
   Segment(Segment&&);
 
   void swap(Segment& other);
