@@ -94,9 +94,9 @@ Note::Note() :
   details_{std::make_pair(NOTE_TYPES::NT_UNKNOWN, std::make_unique<NoteDetails>())}
 {}
 
-Note::Note(std::string name, uint32_t type, description_t description, Binary* binary):
+Note::Note(const std::string& name, uint32_t type, std::vector<uint8_t>&& description, Binary* binary):
   binary_{binary},
-  name_{std::move(name)},
+  name_{name},
   type_{static_cast<NOTE_TYPES>(type)},
   description_{std::move(description)},
   details_{std::make_pair(NOTE_TYPES::NT_UNKNOWN, std::make_unique<NoteDetails>())}
