@@ -53,8 +53,7 @@ emscripten::val inject_into_elf(const emscripten::val& executable,
     const size_t length = executable["length"].as<size_t>();
     std::vector<uint8_t> executable_vec(length);
     if (length > 0) {
-      emscripten::val::global("Uint8Array")
-          .new_(emscripten::typed_memory_view(length, executable_vec.data()))
+      emscripten::val(emscripten::typed_memory_view(length, executable_vec.data()))
           .call<void>("set", executable);
     }
 
@@ -62,7 +61,12 @@ emscripten::val inject_into_elf(const emscripten::val& executable,
         LIEF::ELF::Parser::parse(std::move(executable_vec));
 
     if (!binary) {
-      fprintf(stderr, "postject: Failed to parse binary\n");
+      if (executable_vec.size() >= 4) {
+        fprintf(stderr, "postject: Failed to parse binary. Magic: %02x %02x %02x %02x, Size: %zu\n",
+                executable_vec[0], executable_vec[1], executable_vec[2], executable_vec[3], executable_vec.size());
+      } else {
+        fprintf(stderr, "postject: Failed to parse binary. Size: %zu\n", executable_vec.size());
+      }
       object.set("result", emscripten::val(InjectResult::kError));
       return object;
     }
