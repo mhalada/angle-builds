@@ -72,7 +72,7 @@ vector_iostream& vector_iostream::write(const uint8_t* s, std::streamsize n) {
   return *this;
 }
 
-vector_iostream& vector_iostream::write(std::vector<uint8_t> s) {
+vector_iostream& vector_iostream::write(std::vector<uint8_t>&& s) {
   const auto pos = static_cast<size_t>(tellp());
   if (raw_.size() < (pos + s.size())) {
     raw_.resize(pos + s.size());

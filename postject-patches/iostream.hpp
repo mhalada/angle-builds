@@ -39,8 +39,8 @@ class vector_iostream {
   vector_iostream& put(uint8_t c);
   vector_iostream& write(const uint8_t* s, std::streamsize n);
   vector_iostream& write(span<const uint8_t> sp);
-  vector_iostream& write(std::vector<uint8_t> s);
   vector_iostream& write(const std::vector<uint8_t>& s);
+  vector_iostream& write(std::vector<uint8_t>&& s);
   vector_iostream& write(const std::string& s);
   vector_iostream& write(size_t count, uint8_t value);
   vector_iostream& write_sized_int(uint64_t value, size_t size);
