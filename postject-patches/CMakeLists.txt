@@ -1,9 +1,13 @@
 cmake_minimum_required(VERSION 3.9)
 set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 project(postject)
 
 add_compile_options(-fexceptions)
+if(EMSCRIPTEN)
+  add_link_options(-fexceptions)
+endif()
 
 # Disable unnecessary LIEF options
 option(LIEF_DOC "Build LIEF docs" OFF)
@@ -24,7 +28,7 @@ endif()
 add_subdirectory(vendor/lief)
 
 add_executable(postject src/postject.cpp)
-set_target_properties(postject PROPERTIES LINK_FLAGS "-sSINGLE_FILE -sMODULARIZE=1 -sALLOW_MEMORY_GROWTH -sINITIAL_MEMORY=536870912 -sMAXIMUM_MEMORY=4294967296 -sASSERTIONS=1 --bind")
+set_target_properties(postject PROPERTIES LINK_FLAGS "-sSINGLE_FILE -sMODULARIZE=1 -sALLOW_MEMORY_GROWTH -sINITIAL_MEMORY=536870912 -sMAXIMUM_MEMORY=4294967296 -sASSERTIONS=1 -fexceptions --bind")
 
 if(MSVC)
   set_property(TARGET postject PROPERTY LINK_FLAGS /NODEFAULTLIB:MSVCRT)
