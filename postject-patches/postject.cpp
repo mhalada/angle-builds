@@ -332,6 +332,7 @@ EMSCRIPTEN_BINDINGS(postject) {
   emscripten::function("injectIntoELF", &inject_into_elf);
   emscripten::function("injectIntoMachO", &inject_into_macho);
   emscripten::function("injectIntoPE", &inject_into_pe);
+  emscripten::function("freeLastOutput", &free_last_output);
 }
 
 #if defined(__GNUC__) || defined(__clang__)
