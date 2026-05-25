@@ -478,6 +478,7 @@ class LIEF_API Binary : public LIEF::Binary {
   //!
   //! @return The section added. The `size` and the `virtual address` might change.
   Section* add(const Section& section, bool loaded = true);
+  Section* add(Section&& section, bool loaded = true);
 
   Section* extend(const Section& section, uint64_t size);
 
@@ -513,6 +514,7 @@ class LIEF_API Binary : public LIEF::Binary {
   //!
   //! @return The segment added. `Virtual address` and `File Offset` might change.
   Segment* add(const Segment& segment, uint64_t base = 0);
+  Segment* add(Segment&& segment, uint64_t base = 0);
 
   //! Replace the segment given in 2nd parameter with the segment given in the first one and return the updated segment.
   //!

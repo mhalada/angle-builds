@@ -19,6 +19,13 @@ enum class ExecutableFormat { kELF, kMachO, kPE, kUnknown };
 
 enum class InjectResult { kAlreadyExists, kError, kSuccess };
 
+std::vector<uint8_t> last_output;
+
+void free_last_output() {
+  last_output.clear();
+  last_output.shrink_to_fit();
+}
+
 std::vector<uint8_t> vec_from_val(const emscripten::val& value) {
   // We are using `convertJSArrayToNumberVector()` instead of `vecFromJSArray()`
   // because it is faster. It is okay if we use it without additional type
@@ -50,6 +57,7 @@ emscripten::val inject_into_elf(const emscripten::val& executable,
   object.set("data", emscripten::val::undefined());
 
   try {
+    free_last_output();
     const size_t length = executable["length"].as<size_t>();
     std::vector<uint8_t> executable_vec(length);
     if (length > 0) {
@@ -97,21 +105,16 @@ emscripten::val inject_into_elf(const emscripten::val& executable,
     LIEF::ELF::Builder builder(*binary);
     builder.build();
     
-    std::vector<uint8_t> output = builder.move_build();
+    last_output = builder.move_build();
     binary.reset();
 
-    if (output.empty()) {
+    if (last_output.empty()) {
       fprintf(stderr, "postject: ELF Builder produced empty output\n");
       object.set("result", emscripten::val(InjectResult::kError));
       return object;
     }
 
-    emscripten::val view{
-        emscripten::typed_memory_view(output.size(), output.data())};
-    auto output_data = emscripten::val::global("Uint8Array").new_(output.size());
-    output_data.call<void>("set", view);
-
-    object.set("data", output_data);
+    object.set("data", emscripten::typed_memory_view(last_output.size(), last_output.data()));
     object.set("result", emscripten::val(InjectResult::kSuccess));
   } catch (const std::bad_alloc&) {
     fprintf(stderr, "postject: Out of memory during injection\n");

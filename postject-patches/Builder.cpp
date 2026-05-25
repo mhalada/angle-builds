@@ -81,7 +81,11 @@ Builder::Builder(Binary& binary) :
         std::abort();
       }
   }
-  ios_.reserve(binary.original_size());
+  size_t expected_size = binary.original_size();
+  for (const Note& note : binary.notes()) {
+    expected_size += note.size() + 1024;
+  }
+  ios_.reserve(expected_size);
   ios_.set_endian_swap(should_swap());
 }
 

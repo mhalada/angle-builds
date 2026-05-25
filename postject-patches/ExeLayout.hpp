@@ -245,7 +245,7 @@ class LIEF_LOCAL ExeLayout : public Layout {
       raw_notes.align(sizeof(uint32_t), 0);
 
       // description content
-      const std::vector<uint8_t>& description = note.description();
+      std::vector<uint8_t> description = std::move(const_cast<Note&>(note).description());
       if (should_swap()) {
         const auto* desc_ptr = reinterpret_cast<const uint32_t*>(description.data());
         size_t i = 0;
@@ -259,7 +259,7 @@ class LIEF_LOCAL ExeLayout : public Layout {
           raw_notes.write_conv<uint32_t>(padded);
         }
       } else {
-        raw_notes.write(description.data(), description.size());
+        raw_notes.write(std::move(description));
         raw_notes.align(sizeof(uint32_t), 0);
       }
       notes_off_map_.emplace(&note, pos);

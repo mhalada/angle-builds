@@ -1077,6 +1077,29 @@ Section* Binary::add(const Section& section, bool loaded) {
   return add_section<false>(section);
 }
 
+Section* Binary::add(Section&& section, bool loaded) {
+  if (section.is_frame()) {
+    return add_frame_section(std::move(section));
+  }
+  if (loaded) {
+    return add_section<true>(std::move(section));
+  }
+  return add_section<false>(std::move(section));
+}
+
+Segment* Binary::add(Segment&& segment, uint64_t base) {
+  const E_TYPE type = header().file_type();
+  switch (type) {
+    case E_TYPE::ET_DYN:
+      return add_segment<E_TYPE::ET_DYN>(std::move(segment), base);
+    case E_TYPE::ET_EXEC:
+      return add_segment<E_TYPE::ET_EXEC>(std::move(segment), base);
+    default:
+      LIEF_ERR("add_segment is not implemented for this ELF type");
+      return nullptr;
+  }
+}
+
 
 Section* Binary::add_frame_section(const Section& sec) {
   auto new_section = std::make_unique<Section>(sec);

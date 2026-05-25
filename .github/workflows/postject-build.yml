@@ -39,6 +39,7 @@ jobs:
 
       - name: Patch postject
         run: |
+          cp postject-patches/api.js ./postject/src/api.js
           cp postject-patches/CMakeLists.txt ./postject/CMakeLists.txt
           cp postject-patches/postject.cpp ./postject/src/postject.cpp
           cp postject-patches/iostream.hpp ./postject/vendor/lief/include/LIEF/iostream.hpp
