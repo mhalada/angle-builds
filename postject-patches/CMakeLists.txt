@@ -28,7 +28,7 @@ endif()
 add_subdirectory(vendor/lief)
 
 add_executable(postject src/postject.cpp)
-set_target_properties(postject PROPERTIES LINK_FLAGS "-sSINGLE_FILE -sMODULARIZE=1 -sALLOW_MEMORY_GROWTH -sINITIAL_MEMORY=2147483648 -sMAXIMUM_MEMORY=4294967296 -sASSERTIONS=1 -fexceptions --bind")
+set_target_properties(postject PROPERTIES LINK_FLAGS "-sSINGLE_FILE -sMODULARIZE=1 -sALLOW_MEMORY_GROWTH -sINITIAL_MEMORY=1073741824 -sMAXIMUM_MEMORY=4294967296 -sASSERTIONS=1 -fexceptions --bind")
 
 if(MSVC)
   set_property(TARGET postject PROPERTY LINK_FLAGS /NODEFAULTLIB:MSVCRT)
