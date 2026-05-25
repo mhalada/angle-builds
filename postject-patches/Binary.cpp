@@ -1077,7 +1077,7 @@ Section* Binary::add(const Section& section, bool loaded) {
   return add_section<false>(section);
 }
 
-Section* Binary::add(Section&& section, bool loaded) {
+Section* Binary::add_move(Section&& section, bool loaded) {
   if (section.is_frame()) {
     return add_frame_section(std::move(section));
   }
@@ -1086,20 +1086,6 @@ Section* Binary::add(Section&& section, bool loaded) {
   }
   return add_section<false>(std::move(section));
 }
-
-Segment* Binary::add(Segment&& segment, uint64_t base) {
-  const E_TYPE type = header().file_type();
-  switch (type) {
-    case E_TYPE::ET_DYN:
-      return add_segment<E_TYPE::ET_DYN>(std::move(segment), base);
-    case E_TYPE::ET_EXEC:
-      return add_segment<E_TYPE::ET_EXEC>(std::move(segment), base);
-    default:
-      LIEF_ERR("add_segment is not implemented for this ELF type");
-      return nullptr;
-  }
-}
-
 
 Section* Binary::add_frame_section(const Section& sec) {
   auto new_section = std::make_unique<Section>(sec);
@@ -1179,7 +1165,7 @@ Segment* Binary::add(const Segment& segment, uint64_t base) {
   }
 }
 
-Segment* Binary::add(Segment&& segment, uint64_t base) {
+Segment* Binary::add_move(Segment&& segment, uint64_t base) {
   const uint64_t new_base = base == 0 ? next_virtual_address() : base;
 
   switch(header().file_type()) {
@@ -1192,6 +1178,7 @@ Segment* Binary::add(Segment&& segment, uint64_t base) {
       }
   }
 }
+
 
 
 Segment* Binary::replace(const Segment& new_segment, const Segment& original_segment, uint64_t base) {

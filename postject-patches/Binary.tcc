@@ -323,8 +323,6 @@ Segment* Binary::add_segment<E_TYPE::ET_EXEC>(const Segment& segment, uint64_t b
   // ====================================================================
   //datahandler_->make_hole(new_phdr_offset + phdr_size * header.numberof_segments(), phdr_size);
   header.numberof_segments(header.numberof_segments() + 1);
-  span<const uint8_t> content_ref = segment.content();
-  std::vector<uint8_t> content{content_ref.data(), std::end(content_ref)};
   auto new_segment = std::make_unique<Segment>(segment);
 
   uint64_t last_offset_sections = last_offset_section();
@@ -342,10 +340,9 @@ Segment* Binary::add_segment<E_TYPE::ET_EXEC>(const Segment& segment, uint64_t b
 
   new_segment->physical_address(new_segment->virtual_address());
 
-  uint64_t segmentsize = align(content.size(), psize);
-  content.resize(segmentsize, 0);
+  uint64_t segmentsize = align(new_segment->get_content_size(), psize);
 
-  new_segment->handler_size_ = content.size();
+  new_segment->handler_size_ = new_segment->get_content_size();
   new_segment->physical_size(segmentsize);
   new_segment->virtual_size(segmentsize);
 
@@ -363,8 +360,9 @@ Segment* Binary::add_segment<E_TYPE::ET_EXEC>(const Segment& segment, uint64_t b
     return nullptr;
   }
   
-  std::vector<uint8_t> content = std::move(new_segment->content_c_);
-  new_segment->content(std::move(content));
+  std::vector<uint8_t> segment_content = std::move(new_segment->content_c_);
+  segment_content.resize(segmentsize, 0);
+  new_segment->content(std::move(segment_content));
 
   if (header.section_headers_offset() <= new_segment->file_offset() + new_segment->physical_size()) {
     header.section_headers_offset(header.section_headers_offset() + new_segment->file_offset() + new_segment->physical_size());
@@ -392,9 +390,6 @@ Segment* Binary::add_segment<E_TYPE::ET_DYN>(const Segment& segment, uint64_t ba
   const auto psize = static_cast<uint64_t>(getpagesize());
 
   /*const uint64_t new_phdr_offset = */ relocate_phdr_table();
-
-  span<const uint8_t> content_ref = segment.content();
-  std::vector<uint8_t> content{content_ref.data(), std::end(content_ref)};
 
   auto new_segment = std::make_unique<Segment>(segment);
   new_segment->datahandler_ = datahandler_.get();
@@ -433,8 +428,8 @@ Segment* Binary::add_segment<E_TYPE::ET_DYN>(const Segment& segment, uint64_t ba
     return nullptr;
   }
 
-  std::vector<uint8_t> content = std::move(new_segment->content_c_);
-  new_segment->content(std::move(content));
+  std::vector<uint8_t> segment_content = std::move(new_segment->content_c_);
+  new_segment->content(std::move(segment_content));
 
   header.numberof_segments(header.numberof_segments() + 1);
 
