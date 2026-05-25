@@ -62,6 +62,7 @@ emscripten::val inject_into_elf(const emscripten::val& executable,
         LIEF::ELF::Parser::parse(std::move(executable_vec));
 
     if (!binary) {
+      fprintf(stderr, "postject: Failed to parse binary\n");
       object.set("result", emscripten::val(InjectResult::kError));
       return object;
     }
@@ -94,6 +95,7 @@ emscripten::val inject_into_elf(const emscripten::val& executable,
     
     const std::vector<uint8_t>& output = builder.get_build();
     if (output.empty()) {
+      fprintf(stderr, "postject: ELF Builder produced empty output\n");
       object.set("result", emscripten::val(InjectResult::kError));
       return object;
     }
@@ -106,6 +108,10 @@ emscripten::val inject_into_elf(const emscripten::val& executable,
     object.set("data", output_data);
     object.set("result", emscripten::val(InjectResult::kSuccess));
   } catch (const std::bad_alloc&) {
+    fprintf(stderr, "postject: Out of memory during injection\n");
+    object.set("result", emscripten::val(InjectResult::kError));
+  } catch (const std::exception& e) {
+    fprintf(stderr, "postject: Exception: %s\n", e.what());
     object.set("result", emscripten::val(InjectResult::kError));
   }
 

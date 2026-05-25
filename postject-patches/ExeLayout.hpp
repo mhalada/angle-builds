@@ -259,7 +259,7 @@ class LIEF_LOCAL ExeLayout : public Layout {
           raw_notes.write_conv<uint32_t>(padded);
         }
       } else {
-        raw_notes.write(description);
+        raw_notes.write(description.data(), description.size());
         raw_notes.align(sizeof(uint32_t), 0);
       }
       notes_off_map_.emplace(&note, pos);
@@ -566,6 +566,10 @@ class LIEF_LOCAL ExeLayout : public Layout {
 
   inline const std::vector<uint8_t>& raw_notes() const {
     return raw_notes_;
+  }
+
+  inline std::vector<uint8_t>&& move_raw_notes() {
+    return std::move(raw_notes_);
   }
 
   result<bool> relocate() {
