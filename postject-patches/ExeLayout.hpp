@@ -630,7 +630,7 @@ class LIEF_LOCAL ExeLayout : public Layout {
       rsegment.type(SEGMENT_TYPES::PT_LOAD);
       rsegment.add(ELF_SEGMENT_FLAGS::PF_R);
       rsegment.content(std::vector<uint8_t>(read_segment));
-      new_rsegment = binary_->add(rsegment);
+      new_rsegment = binary_->add(std::move(rsegment));
       if (new_rsegment != nullptr) {
         LIEF_DEBUG("R-Segment: 0x{:x}:0x{:x}", new_rsegment->virtual_address(), new_rsegment->virtual_size());
       } else {
@@ -661,7 +661,7 @@ class LIEF_LOCAL ExeLayout : public Layout {
       rwsegment.add(ELF_SEGMENT_FLAGS::PF_R);
       rwsegment.add(ELF_SEGMENT_FLAGS::PF_W);
       rwsegment.content(std::vector<uint8_t>(read_write_segment));
-      new_rwsegment = binary_->add(rwsegment);
+      new_rwsegment = binary_->add(std::move(rwsegment));
       if (new_rwsegment != nullptr) {
         LIEF_DEBUG("RW-Segment: 0x{:x}:0x{:x}", new_rwsegment->virtual_address(), new_rwsegment->virtual_size());
       } else {

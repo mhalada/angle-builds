@@ -47,13 +47,16 @@ jobs:
           cp postject-patches/Builder.hpp ./postject/vendor/lief/include/LIEF/ELF/Builder.hpp
           cp postject-patches/Note.hpp ./postject/vendor/lief/include/LIEF/ELF/Note.hpp
           cp postject-patches/Parser.hpp ./postject/vendor/lief/include/LIEF/ELF/Parser.hpp
+          cp postject-patches/Segment.hpp ./postject/vendor/lief/include/LIEF/ELF/Segment.hpp
           cp postject-patches/iostream.cpp ./postject/vendor/lief/src/iostream.cpp
           cp postject-patches/Binary.cpp ./postject/vendor/lief/src/ELF/Binary.cpp
+          cp postject-patches/Binary.tcc ./postject/vendor/lief/src/ELF/Binary.tcc
           cp postject-patches/Builder.cpp ./postject/vendor/lief/src/ELF/Builder.cpp
           cp postject-patches/Builder.tcc ./postject/vendor/lief/src/ELF/Builder.tcc
           cp postject-patches/ExeLayout.hpp ./postject/vendor/lief/src/ELF/ExeLayout.hpp
           cp postject-patches/Note.cpp ./postject/vendor/lief/src/ELF/Note.cpp
           cp postject-patches/Parser.cpp ./postject/vendor/lief/src/ELF/Parser.cpp
+          cp postject-patches/Segment.cpp ./postject/vendor/lief/src/ELF/Segment.cpp
 
       - name: Build
         working-directory: postject

@@ -47,9 +47,10 @@ class LIEF_API Note : public Object {
 
   public:
   Note();
-  Note(std::string  name, uint32_t type, description_t description, Binary* binary=nullptr);
-  Note(const std::string& name, NOTE_TYPES type, const description_t& description, Binary* binary=nullptr);
-  Note(const std::string& name, NOTE_TYPES_CORE type, const description_t& description, Binary* binary=nullptr);
+  Note(const std::string& name, uint32_t type, std::vector<uint8_t>&& description, Binary* binary=nullptr);
+  Note(const std::string& name, NOTE_TYPES type, std::vector<uint8_t>&& description, Binary* binary=nullptr);
+  Note(const std::string& name, NOTE_TYPES_CORE type, std::vector<uint8_t>&& description, Binary* binary=nullptr);
+
 
   Note& operator=(Note copy);
   Note(const Note& copy);

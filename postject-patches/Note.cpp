@@ -102,12 +102,12 @@ Note::Note(std::string name, uint32_t type, description_t description, Binary* b
   details_{std::make_pair(NOTE_TYPES::NT_UNKNOWN, std::make_unique<NoteDetails>())}
 {}
 
-Note::Note(const std::string& name, NOTE_TYPES type, const description_t& description, Binary* binary):
-  Note::Note{name, static_cast<uint32_t>(type), description, binary}
+Note::Note(const std::string& name, NOTE_TYPES type, std::vector<uint8_t>&& description, Binary* binary):
+  Note::Note{name, static_cast<uint32_t>(type), std::move(description), binary}
 {}
 
-Note::Note(const std::string& name, NOTE_TYPES_CORE type, const description_t& description, Binary* binary):
-  Note::Note{name, static_cast<uint32_t>(type), description, binary}
+Note::Note(const std::string& name, NOTE_TYPES_CORE type, std::vector<uint8_t>&& description, Binary* binary):
+  Note::Note{name, static_cast<uint32_t>(type), std::move(description), binary}
 {
   is_core_ = true;
   details();

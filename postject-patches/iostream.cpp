@@ -78,9 +78,7 @@ vector_iostream& vector_iostream::write(std::vector<uint8_t>&& s) {
     raw_.resize(pos + s.size());
   }
 
-  auto it = std::begin(raw_);
-  std::advance(it, pos);
-  std::move(std::begin(s), std::end(s), it);
+  memcpy(raw_.data() + pos, s.data(), s.size());
 
   current_pos_ += s.size();
   return *this;

@@ -1179,6 +1179,20 @@ Segment* Binary::add(const Segment& segment, uint64_t base) {
   }
 }
 
+Segment* Binary::add(Segment&& segment, uint64_t base) {
+  const uint64_t new_base = base == 0 ? next_virtual_address() : base;
+
+  switch(header().file_type()) {
+    case E_TYPE::ET_EXEC: return add_segment<E_TYPE::ET_EXEC>(std::move(segment), new_base);
+    case E_TYPE::ET_DYN:  return add_segment<E_TYPE::ET_DYN>(std::move(segment), new_base);
+    default:
+      {
+        LIEF_WARN("Adding segment for {} is not implemented", to_string(header().file_type()));
+        return nullptr;
+      }
+  }
+}
+
 
 Segment* Binary::replace(const Segment& new_segment, const Segment& original_segment, uint64_t base) {
 
