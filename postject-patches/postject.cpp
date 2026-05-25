@@ -97,7 +97,9 @@ emscripten::val inject_into_elf(const emscripten::val& executable,
     LIEF::ELF::Builder builder(*binary);
     builder.build();
     
-    const std::vector<uint8_t>& output = builder.get_build();
+    std::vector<uint8_t> output = builder.move_build();
+    binary.reset();
+
     if (output.empty()) {
       fprintf(stderr, "postject: ELF Builder produced empty output\n");
       object.set("result", emscripten::val(InjectResult::kError));
